@@ -130,7 +130,7 @@ body {
   top: 30px;
   left: 50%;
   min-width: 110px;
-  max-width: min(75vw, 210px);
+  max-width: min(75vw, 190px);
   transform: translateX(-50%) translateY(8px) scale(0.88);
   opacity: 0;
   z-index: 3;
@@ -256,8 +256,7 @@ body {
   display: block;
 }
 
-#xiaoke-wrap.dragging #xiaoke,
-#xiaoke-wrap.dropping #xiaoke {
+#xiaoke-wrap.dragging #xiaoke {
   animation-play-state: paused;
 }
 
@@ -378,8 +377,8 @@ body {
   }
 
   #title {
-    font-size: clamp(28px, 7.4vw, 38px);
-    letter-spacing: 0.12em;
+    font-size: 18px;
+    letter-spacing: 0.14em;
   }
 
   #stage {
@@ -387,7 +386,7 @@ body {
   }
 
   #clock {
-    top: 196px;
+    top: 100px;
     width: 96vw;
     min-height: 280px;
   }
@@ -398,14 +397,14 @@ body {
 
   .clock-digit {
     gap: 3px;
-    width: clamp(44px, 11.7vw, 72px);
-    height: clamp(184px, 49vw, 300px);
+    width: clamp(52px, 13.5vw, 72px);
+    height: clamp(216px, 56vw, 300px);
   }
 
   .clock-colon {
     gap: 3px;
-    width: clamp(12px, 3.2vw, 20px);
-    height: clamp(184px, 49vw, 300px);
+    width: clamp(14px, 3.6vw, 20px);
+    height: clamp(216px, 56vw, 300px);
   }
 
   #xiaoke {
@@ -418,7 +417,8 @@ body {
   }
 
   #bubble {
-    max-width: min(82vw, 210px);
+    top: -16px;
+    max-width: min(82vw, 190px);
   }
 
   #bubble-os {
@@ -650,7 +650,7 @@ function placeBubble() {
 
 function sizeBubbleToText() {
   const textWidth = Math.ceil(bubbleOs.scrollWidth);
-  const targetWidth = Math.max(176, Math.min(280, textWidth + 44));
+  const targetWidth = Math.max(120, Math.min(280, textWidth + 44));
   bubble.style.width = `${targetWidth}px`;
 }
 
@@ -679,14 +679,14 @@ function triggerSquash() {
 
 function finishDrop() {
   dropRafId = 0;
-  triggerSquash();
   dropping = false;
+  wrap.classList.remove('dropping');
+  triggerSquash();
   squashTimeoutId = setTimeout(() => {
     svg.classList.remove('squash');
-    wrap.classList.remove('dropping');
     squashTimeoutId = null;
     render();
-  }, 320);
+  }, 310);
   render();
 }
 
