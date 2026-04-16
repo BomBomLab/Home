@@ -3,37 +3,61 @@
 <head>
 <meta charset="UTF-8">
 <title>小克</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
   background: #F9EFE7;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   min-height: 100vh;
   font-family: 'JetBrains Mono', monospace;
   overflow: hidden;
 }
 
-#scene {
-  position: relative;
+#header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 72px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 20px;
+  justify-content: center;
+  background: rgba(249,239,231,0.08);
+  backdrop-filter: blur(6px);
+  z-index: 10;
 }
 
 #title {
   color: #1b1b1b;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 42px;
+  font-family: 'Bodoni Moda', serif;
+  font-size: 38px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.18em;
   line-height: 1;
-  position: relative;
-  z-index: 1;
+}
+
+#stage {
+  position: fixed;
+  inset: 72px 0 0 0;
+  overflow: hidden;
+}
+
+#xiaoke-wrap {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+
+#xiaoke-wrap.dragging {
+  cursor: grabbing;
 }
 
 #glow {
@@ -41,7 +65,8 @@ body {
   width: 360px;
   height: 240px;
   background: radial-gradient(ellipse at 50% 60%, rgba(227,126,82,0.18) 0%, transparent 68%);
-  top: 72px; left: 50%;
+  top: 76px;
+  left: 50%;
   transform: translateX(-50%);
   pointer-events: none;
   z-index: 0;
@@ -139,11 +164,15 @@ body {
 </head>
 <body>
 
-<div id="scene">
+<header id="header">
   <h1 id="title">BOM LAB</h1>
-  <div id="glow"></div>
+</header>
 
-  <svg id="xiaoke" viewBox="0 0 700 538" width="350" height="269">
+<div id="stage">
+  <div id="xiaoke-wrap">
+    <div id="glow"></div>
+
+    <svg id="xiaoke" viewBox="0 0 700 538" width="350" height="269">
 
     <!-- Headband (static) -->
     <rect x="88"  y="40"  width="40"  height="101" fill="#1B63A9"/>
@@ -209,9 +238,10 @@ body {
     <rect class="eye-outer" x="419" y="196" width="40" height="40" fill="black"/>
     <rect class="eye-outer" x="538" y="196" width="40" height="40" fill="black"/>
 
-  </svg>
+    </svg>
 
-  <p id="label">小克·上线中</p>
+    <p id="label">小克·上线中</p>
+  </div>
 </div>
 
 <script>
@@ -223,6 +253,137 @@ function blink() {
   setTimeout(blink, 2000 + Math.random() * 3000);
 }
 setTimeout(blink, 800 + Math.random() * 1200);
+
+const stage = document.getElementById('stage');
+const wrap = document.getElementById('xiaoke-wrap');
+const svg = document.getElementById('xiaoke');
+
+let baseX = 0;
+let baseY = 0;
+let autoOffsetX = 0;
+let walkPhase = Math.random() * Math.PI * 2;
+let walkSpeed = 0.012 + Math.random() * 0.008;
+let walkAmplitude = 10 + Math.random() * 16;
+let dragging = false;
+let dragOffsetX = 0;
+let dragOffsetY = 0;
+let longPressTimer = null;
+let touchStartX = 0;
+let touchStartY = 0;
+
+function getBounds() {
+  return {
+    width: wrap.offsetWidth,
+    height: wrap.offsetHeight,
+    maxX: Math.max(0, stage.clientWidth - wrap.offsetWidth),
+    maxY: Math.max(0, stage.clientHeight - wrap.offsetHeight)
+  };
+}
+
+function clampPosition(x, y) {
+  const bounds = getBounds();
+  return {
+    x: Math.min(bounds.maxX, Math.max(0, x)),
+    y: Math.min(bounds.maxY, Math.max(24, y))
+  };
+}
+
+function render() {
+  const pos = clampPosition(baseX + autoOffsetX, baseY);
+  wrap.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
+}
+
+function placeInitial() {
+  const bounds = getBounds();
+  baseX = Math.max(0, (stage.clientWidth - bounds.width) / 2);
+  baseY = Math.max(72, Math.min(stage.clientHeight - bounds.height, stage.clientHeight * 0.24));
+  autoOffsetX = 0;
+  render();
+}
+
+function startDrag(clientX, clientY) {
+  const currentX = clampPosition(baseX + autoOffsetX, baseY).x;
+  const currentY = clampPosition(baseX + autoOffsetX, baseY).y;
+  dragging = true;
+  autoOffsetX = 0;
+  baseX = currentX;
+  baseY = currentY;
+  dragOffsetX = clientX - currentX;
+  dragOffsetY = clientY - currentY;
+  wrap.classList.add('dragging');
+  render();
+}
+
+function stopDrag() {
+  dragging = false;
+  wrap.classList.remove('dragging');
+}
+
+function clearLongPress() {
+  if (longPressTimer) {
+    clearTimeout(longPressTimer);
+    longPressTimer = null;
+  }
+}
+
+function handlePointerDown(event) {
+  if (event.pointerType === 'touch') {
+    clearLongPress();
+    touchStartX = event.clientX;
+    touchStartY = event.clientY;
+    longPressTimer = setTimeout(() => {
+      startDrag(event.clientX, event.clientY);
+    }, 280);
+    return;
+  }
+
+  event.preventDefault();
+  startDrag(event.clientX, event.clientY);
+}
+
+function handlePointerMove(event) {
+  if (event.pointerType === 'touch' && !dragging && longPressTimer) {
+    const movedX = Math.abs(event.clientX - touchStartX);
+    const movedY = Math.abs(event.clientY - touchStartY);
+    if (movedX > 8 || movedY > 8) {
+      clearLongPress();
+    }
+  }
+
+  if (!dragging) {
+    return;
+  }
+
+  event.preventDefault();
+  const next = clampPosition(event.clientX - dragOffsetX, event.clientY - dragOffsetY);
+  baseX = next.x;
+  baseY = next.y;
+  render();
+}
+
+function handlePointerUp() {
+  clearLongPress();
+  stopDrag();
+}
+
+wrap.addEventListener('pointerdown', handlePointerDown);
+window.addEventListener('pointermove', handlePointerMove, { passive: false });
+window.addEventListener('pointerup', handlePointerUp);
+window.addEventListener('pointercancel', handlePointerUp);
+window.addEventListener('resize', placeInitial);
+
+function animateWalk() {
+  if (!dragging) {
+    walkPhase += walkSpeed;
+    autoOffsetX = Math.sin(walkPhase) * walkAmplitude;
+    render();
+  }
+  requestAnimationFrame(animateWalk);
+}
+
+svg.addEventListener('dragstart', (event) => event.preventDefault());
+placeInitial();
+animateWalk();
 
 // Floating music emoji
 const pool = ['🎵','🎶','🎧','🎤','🎸','🎹','♪','♫'];
