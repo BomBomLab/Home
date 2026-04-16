@@ -408,6 +408,15 @@ body {
     height: clamp(184px, 49vw, 300px);
   }
 
+  #xiaoke {
+    width: 175px;
+    height: 134px;
+  }
+
+  #xiaoke-wrap {
+    padding: 72px 40px 72px;
+  }
+
   #bubble {
     max-width: min(82vw, 210px);
   }
@@ -553,7 +562,26 @@ const osPool = [
   '耳机里这段 bass，有点上头。',
   '小螃蟹也会认真经营自己的舞台感。',
   '要是被夸可爱，我会多走两个来回。',
-  '今天也想做最懂节奏的海边 DJ。'
+  '今天也想做最懂节奏的海边 DJ。',
+  '顺其自然，答案自会浮现。',
+  '现在还不是时候。',
+  '全力以赴，你会赢的。',
+  '迹象明显，是的。',
+  '毫无疑问，去做吧。',
+  '你心里其实已经有答案了。',
+  '放手，让它流向该去的地方。',
+  '不要强求，缘分自有安排。',
+  '比你以为的还要顺利。',
+  '有人在偷偷替你高兴。',
+  '今天适合开始一件新的事。',
+  '先睡一觉，明天再说。',
+  '转机在意想不到的地方。',
+  '这次是真的可以。',
+  '不确定，但感觉还不错。',
+  '答案就在你刚才跳过的那一行。',
+  '时间会给你一个交代。',
+  '相信第一感觉。',
+  '再问一次也是一样的答案。'
 ];
 
 let baseX = 0;
@@ -569,6 +597,9 @@ let dragOffsetY = 0;
 let longPressTimer = null;
 let touchStartX = 0;
 let touchStartY = 0;
+let tapDownX = 0;
+let tapDownY = 0;
+let tapDownTime = 0;
 let bubbleFlip = false;
 let osIndex = -1;
 let bubbleTimeoutId = null;
@@ -762,6 +793,10 @@ function clearLongPress() {
 }
 
 function handlePointerDown(event) {
+  tapDownX = event.clientX;
+  tapDownY = event.clientY;
+  tapDownTime = Date.now();
+
   if (event.pointerType === 'touch') {
     clearLongPress();
     touchStartX = event.clientX;
@@ -796,9 +831,18 @@ function handlePointerMove(event) {
   render();
 }
 
-function handlePointerUp() {
+function handlePointerUp(event) {
+  const dx = Math.abs((event ? event.clientX : tapDownX) - tapDownX);
+  const dy = Math.abs((event ? event.clientY : tapDownY) - tapDownY);
+  const isTap = dx < 8 && dy < 8 && Date.now() - tapDownTime < 300;
   clearLongPress();
   stopDrag();
+  if (isTap) onTap();
+}
+
+function onTap() {
+  svg.classList.remove('blinking');
+  showBubble();
 }
 
 wrap.addEventListener('pointerdown', handlePointerDown);
