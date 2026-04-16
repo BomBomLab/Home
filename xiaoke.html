@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>小克</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #0b0b0b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-family: 'JetBrains Mono', monospace;
+  overflow: hidden;
+}
+
+#scene {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+#glow {
+  position: absolute;
+  width: 600px;
+  height: 400px;
+  background: radial-gradient(ellipse at 50% 60%, rgba(227,126,82,0.14) 0%, transparent 68%);
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Whole character floats */
+#xiaoke {
+  position: relative;
+  z-index: 1;
+  animation: float 3.4s ease-in-out infinite;
+  display: block;
+}
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-14px); }
+}
+
+/* Arms - pivot at body connection edge */
+#arm-left  { transform-origin: 109px 340px; animation: wave-l 3.8s ease-in-out infinite; }
+#arm-right { transform-origin: 591px 299px; animation: wave-r 3.8s ease-in-out infinite 0.5s; }
+
+@keyframes wave-l {
+  0%,100% { transform: rotate(0deg); }
+  20%     { transform: rotate(-26deg); }
+  40%     { transform: rotate(-8deg); }
+  60%     { transform: rotate(-30deg); }
+  80%     { transform: rotate(0deg); }
+}
+@keyframes wave-r {
+  0%,100% { transform: rotate(0deg); }
+  20%     { transform: rotate(26deg); }
+  40%     { transform: rotate(8deg); }
+  60%     { transform: rotate(30deg); }
+  80%     { transform: rotate(0deg); }
+}
+
+/* Legs - rotate from top center of each leg group */
+.leg { transform-box: fill-box; transform-origin: center top; }
+#leg-1 { animation: sway 1.6s ease-in-out infinite 0s; }
+#leg-2 { animation: sway 1.6s ease-in-out infinite 0.4s; }
+#leg-3 { animation: sway 1.6s ease-in-out infinite 0.8s; }
+#leg-4 { animation: sway 1.6s ease-in-out infinite 1.2s; }
+@keyframes sway {
+  0%,100% { transform: rotate(0deg); }
+  25%     { transform: rotate(9deg); }
+  75%     { transform: rotate(-9deg); }
+}
+
+/* Eyes */
+.eye-inner { }
+.eye-outer { opacity: 0; }
+
+@keyframes close-eye {
+  0%        { transform: translateY(0px); }
+  30%,70%   { transform: translateY(20px); }
+  100%      { transform: translateY(0px); }
+}
+@keyframes show-outer {
+  0%        { opacity: 0; }
+  30%,70%   { opacity: 1; }
+  100%      { opacity: 0; }
+}
+
+#xiaoke.blinking .eye-inner {
+  animation: close-eye 0.32s ease both;
+}
+#xiaoke.blinking .eye-outer {
+  animation: show-outer 0.32s ease both;
+}
+
+/* Label */
+#label {
+  color: rgba(227,126,82,0.55);
+  font-size: 13px;
+  letter-spacing: 0.28em;
+  z-index: 1;
+  position: relative;
+}
+
+/* Floating music emoji */
+.note {
+  position: fixed;
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+  animation: drift linear forwards;
+}
+@keyframes drift {
+  0%   { opacity: 0;    transform: translateY(0)     rotate(0deg)   scale(0.7); }
+  12%  { opacity: 0.8; }
+  80%  { opacity: 0.5; }
+  100% { opacity: 0;    transform: translateY(-240px) rotate(18deg)  scale(1.1); }
+}
+</style>
+</head>
+<body>
+
+<div id="scene">
+  <div id="glow"></div>
+
+  <svg id="xiaoke" viewBox="0 0 700 538" width="700" height="538">
+
+    <!-- Headband (static) -->
+    <rect x="88"  y="40"  width="40"  height="101" fill="#1B63A9"/>
+    <rect x="128" y="20"  width="40"  height="40"  fill="#1B63A9"/>
+    <rect x="167" y="0"   width="361" height="40"  fill="#1B63A9"/>
+    <rect x="528" y="20"  width="40"  height="40"  fill="#1B63A9"/>
+    <rect x="568" y="40"  width="40"  height="101" fill="#1B63A9"/>
+
+    <!-- Headphone cups (static) -->
+    <rect x="59"  y="141" width="50"  height="159" fill="#1B63A9"/>
+    <rect x="19"  y="170" width="40"  height="101" fill="#1B63A9"/>
+    <rect x="591" y="141" width="50"  height="159" fill="#1B63A9"/>
+    <rect x="638" y="170" width="40"  height="101" fill="#1B63A9"/>
+
+    <!-- Body -->
+    <rect x="109" y="141" width="482" height="317" fill="#E37E52"/>
+
+    <!-- Left arm — pivots at (109, 340) -->
+    <g id="arm-left">
+      <rect x="0" y="300" width="109" height="81" fill="#E37E52"/>
+    </g>
+
+    <!-- Right arm — pivots at (591, 299) -->
+    <g id="arm-right">
+      <rect x="591" y="259" width="109" height="81" fill="#E37E52"/>
+    </g>
+
+    <!-- Legs (4 pairs, each zigzags) -->
+    <g id="leg-1" class="leg">
+      <rect x="148" y="458" width="40" height="40" fill="#E37E52"/>
+      <rect x="138" y="498" width="40" height="40" fill="#E37E52"/>
+    </g>
+    <g id="leg-2" class="leg">
+      <rect x="227" y="458" width="40" height="40" fill="#E37E52"/>
+      <rect x="217" y="498" width="40" height="40" fill="#E37E52"/>
+    </g>
+    <g id="leg-3" class="leg">
+      <rect x="429" y="458" width="40" height="40" fill="#E37E52"/>
+      <rect x="419" y="498" width="40" height="40" fill="#E37E52"/>
+    </g>
+    <g id="leg-4" class="leg">
+      <rect x="508" y="458" width="40" height="40" fill="#E37E52"/>
+      <rect x="498" y="498" width="40" height="40" fill="#E37E52"/>
+    </g>
+
+    <!--
+      Eyes:
+        open (豆豆眼)   = two center blocks at y=196
+        closed (∩ arch) = center blocks slide to y=216 + outer blocks appear at y=196
+    -->
+
+    <!-- Left eye inner (open: y=196, close: y=216 via translateY) -->
+    <rect class="eye-inner" x="158" y="196" width="40" height="40" fill="black"/>
+    <rect class="eye-inner" x="197" y="196" width="40" height="40" fill="black"/>
+    <!-- Left eye outer (only visible when closed) -->
+    <rect class="eye-outer" x="118" y="196" width="40" height="40" fill="black"/>
+    <rect class="eye-outer" x="237" y="196" width="40" height="40" fill="black"/>
+
+    <!-- Right eye inner -->
+    <rect class="eye-inner" x="459" y="196" width="40" height="40" fill="black"/>
+    <rect class="eye-inner" x="498" y="196" width="40" height="40" fill="black"/>
+    <!-- Right eye outer -->
+    <rect class="eye-outer" x="419" y="196" width="40" height="40" fill="black"/>
+    <rect class="eye-outer" x="538" y="196" width="40" height="40" fill="black"/>
+
+  </svg>
+
+  <p id="label">小克·上线中</p>
+</div>
+
+<script>
+// Blink timer
+function blink() {
+  const svg = document.getElementById('xiaoke');
+  svg.classList.add('blinking');
+  setTimeout(() => svg.classList.remove('blinking'), 320);
+  setTimeout(blink, 2000 + Math.random() * 3000);
+}
+setTimeout(blink, 800 + Math.random() * 1200);
+
+// Floating music emoji
+const pool = ['🎵','🎶','🎧','🎤','🎸','🎹','♪','♫'];
+function spawnNote() {
+  const el = document.createElement('span');
+  el.className = 'note';
+  el.textContent = pool[Math.floor(Math.random() * pool.length)];
+
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  el.style.left = (vw * 0.08 + Math.random() * vw * 0.84) + 'px';
+  el.style.top  = (vh * 0.38 + Math.random() * vh * 0.38) + 'px';
+
+  const dur = 2.2 + Math.random() * 2.2;
+  el.style.animationDuration = dur + 's';
+  el.style.fontSize = (11 + Math.random() * 13) + 'px';
+
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), (dur + 0.1) * 1000);
+  setTimeout(spawnNote, 300 + Math.random() * 550);
+}
+spawnNote();
+</script>
+</body>
+</html>
