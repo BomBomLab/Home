@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <title>小克</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  background: #0b0b0b;
+  background: #F9EFE7;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -22,15 +22,26 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 28px;
+  gap: 20px;
+}
+
+#title {
+  color: #1b1b1b;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 42px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  position: relative;
+  z-index: 1;
 }
 
 #glow {
   position: absolute;
-  width: 600px;
-  height: 400px;
-  background: radial-gradient(ellipse at 50% 60%, rgba(227,126,82,0.14) 0%, transparent 68%);
-  top: 0; left: 50%;
+  width: 360px;
+  height: 240px;
+  background: radial-gradient(ellipse at 50% 60%, rgba(227,126,82,0.18) 0%, transparent 68%);
+  top: 72px; left: 50%;
   transform: translateX(-50%);
   pointer-events: none;
   z-index: 0;
@@ -103,7 +114,7 @@ body {
 
 /* Label */
 #label {
-  color: rgba(227,126,82,0.55);
+  color: rgba(227,126,82,0.75);
   font-size: 13px;
   letter-spacing: 0.28em;
   z-index: 1;
@@ -129,9 +140,10 @@ body {
 <body>
 
 <div id="scene">
+  <h1 id="title">BOM LAB</h1>
   <div id="glow"></div>
 
-  <svg id="xiaoke" viewBox="0 0 700 538" width="700" height="538">
+  <svg id="xiaoke" viewBox="0 0 700 538" width="350" height="269">
 
     <!-- Headband (static) -->
     <rect x="88"  y="40"  width="40"  height="101" fill="#1B63A9"/>
