@@ -2,6 +2,7 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>小克</title>
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="apple-touch-icon" href="logo.png">
@@ -128,18 +129,21 @@ body {
   position: absolute;
   top: 30px;
   left: 50%;
-  width: 176px;
-  aspect-ratio: 2 / 1;
+  min-width: 110px;
+  max-width: min(75vw, 210px);
   transform: translateX(-50%) translateY(8px) scale(0.88);
   opacity: 0;
   z-index: 3;
   pointer-events: none;
 }
 
-#bubble-shape,
-#bubble-label {
+#bubble-shape {
   position: absolute;
   inset: 0;
+}
+
+#bubble-label {
+  position: relative;
 }
 
 #bubble-shape {
@@ -158,7 +162,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 12px 18px 26px;
-  font-size: clamp(12px, 1.2vw, 14px);
+  font-size: clamp(13px, 1.2vw, 14px);
   font-weight: 700;
   line-height: 1.45;
   text-align: center;
@@ -227,7 +231,7 @@ body {
 
 #glow {
   position: absolute;
-  width: 300px;
+  width: min(80vw, 300px);
   height: 45px;
   background: radial-gradient(ellipse at center, rgba(96,58,38,0.10) 0%, rgba(96,58,38,0.06) 40%, rgba(96,58,38,0.02) 70%, transparent 100%);
   top: 379px;
@@ -389,26 +393,29 @@ body {
   }
 
   #clock-text {
-    gap: clamp(4px, 1vw, 8px);
-    transform: translateX(-2px);
+    gap: clamp(3px, 0.8vw, 6px);
   }
 
   .clock-digit {
-    gap: 4px;
-    width: clamp(52px, 13vw, 74px);
-    height: clamp(216px, 52vw, 320px);
+    gap: 3px;
+    width: clamp(44px, 11.7vw, 72px);
+    height: clamp(184px, 49vw, 300px);
   }
 
   .clock-colon {
-    gap: 4px;
-    width: clamp(14px, 3vw, 22px);
-    height: clamp(216px, 52vw, 320px);
+    gap: 3px;
+    width: clamp(12px, 3.2vw, 20px);
+    height: clamp(184px, 49vw, 300px);
+  }
+
+  #bubble {
+    max-width: min(82vw, 210px);
   }
 
   #bubble-os {
     font-size: 13px;
     line-height: 1.4;
-    padding: 12px 20px 26px;
+    padding: 10px 16px 22px;
   }
 }
 </style>
@@ -426,7 +433,7 @@ body {
 <div id="stage">
   <div id="xiaoke-wrap">
     <div id="bubble">
-      <svg id="bubble-shape" viewBox="0 0 328 164" aria-hidden="true">
+      <svg id="bubble-shape" viewBox="0 0 328 164" preserveAspectRatio="none" aria-hidden="true">
         <path d="M23 23V0H305.5V23H328V113.5H305.5V138.5H77.5L48 164V138.5H23V113.5H0V23H23Z"/>
       </svg>
       <div id="bubble-label">
@@ -873,10 +880,11 @@ function spawnNote() {
   el.className = 'note';
   el.textContent = pool[Math.floor(Math.random() * pool.length)];
 
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-  el.style.left = (vw * 0.08 + Math.random() * vw * 0.84) + 'px';
-  el.style.top  = (vh * 0.38 + Math.random() * vh * 0.38) + 'px';
+  const rect = wrap.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height * 0.25;
+  el.style.left = (cx + (Math.random() - 0.5) * rect.width * 0.9) + 'px';
+  el.style.top  = (cy + (Math.random() - 0.5) * rect.height * 0.4) + 'px';
 
   const dur = 3.2 + Math.random() * 2.8;
   el.style.animationDuration = dur + 's';
