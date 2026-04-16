@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>小克</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -12,6 +14,9 @@ body {
   min-height: 100vh;
   font-family: 'JetBrains Mono', monospace;
   overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 #header {
@@ -101,6 +106,8 @@ body {
   align-items: center;
   cursor: grab;
   user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
   touch-action: none;
   padding: 132px 84px 134px;
   transition: transform 0.34s cubic-bezier(0.2, 0.72, 0.18, 1);
@@ -121,7 +128,7 @@ body {
   position: absolute;
   top: 30px;
   left: 50%;
-  width: 160px;
+  width: 176px;
   aspect-ratio: 2 / 1;
   transform: translateX(-50%) translateY(8px) scale(0.88);
   opacity: 0;
@@ -151,12 +158,25 @@ body {
   align-items: center;
   justify-content: center;
   padding: 12px 18px 26px;
-  font-size: 14px;
+  font-size: clamp(12px, 1.2vw, 14px);
   font-weight: 700;
   line-height: 1.45;
   text-align: center;
   position: relative;
   z-index: 1;
+}
+
+#header,
+#title,
+#clock,
+#clock-text,
+#bubble,
+#bubble-label,
+#bubble-os,
+#xiaoke {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 #bubble.show {
@@ -346,6 +366,50 @@ body {
   12%  { opacity: 0.8; }
   80%  { opacity: 0.5; }
   100% { opacity: 0;    transform: translateY(-240px) rotate(18deg)  scale(1.1); }
+}
+
+@media (max-width: 640px) {
+  #header {
+    height: 76px;
+  }
+
+  #title {
+    font-size: clamp(28px, 7.4vw, 38px);
+    letter-spacing: 0.12em;
+  }
+
+  #stage {
+    inset: 76px 0 0 0;
+  }
+
+  #clock {
+    top: 196px;
+    width: 96vw;
+    min-height: 280px;
+  }
+
+  #clock-text {
+    gap: clamp(4px, 1vw, 8px);
+    transform: translateX(-2px);
+  }
+
+  .clock-digit {
+    gap: 4px;
+    width: clamp(52px, 13vw, 74px);
+    height: clamp(216px, 52vw, 320px);
+  }
+
+  .clock-colon {
+    gap: 4px;
+    width: clamp(14px, 3vw, 22px);
+    height: clamp(216px, 52vw, 320px);
+  }
+
+  #bubble-os {
+    font-size: 13px;
+    line-height: 1.4;
+    padding: 12px 20px 26px;
+  }
 }
 </style>
 </head>
@@ -546,6 +610,12 @@ function placeBubble() {
   }
 }
 
+function sizeBubbleToText() {
+  const textWidth = Math.ceil(bubbleOs.scrollWidth);
+  const targetWidth = Math.max(176, Math.min(280, textWidth + 44));
+  bubble.style.width = `${targetWidth}px`;
+}
+
 function render() {
   const pos = clampPosition(baseX + autoOffsetX, baseY);
   wrap.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
@@ -742,6 +812,7 @@ function animateWalk() {
 function rotateOs() {
   osIndex = (osIndex + 1) % osPool.length;
   bubbleOs.textContent = osPool[osIndex];
+  sizeBubbleToText();
 }
 
 function showBubble() {
@@ -790,6 +861,7 @@ updateClock();
 setInterval(updateClock, 60000);
 placeInitial();
 animateWalk();
+sizeBubbleToText();
 showBubble();
 setTimeout(showBubble, 7000);
 queueBubble(27000);
