@@ -45,7 +45,7 @@ body {
 
 #clock {
   position: fixed;
-  top: 242px;
+  top: 90px;
   left: 50%;
   transform: translateX(-50%);
   width: min(92vw, 820px);
@@ -54,12 +54,13 @@ body {
   justify-content: center;
   pointer-events: none;
   z-index: 8;
+  filter: drop-shadow(0 6px 28px rgba(180, 110, 60, 0.10));
 }
 
 #clock-text {
   display: flex;
   align-items: flex-start;
-  gap: clamp(4px, 0.8vw, 12px);
+  gap: clamp(8px, 1.6vw, 24px);
   transform: translateX(-4px);
 }
 
@@ -67,23 +68,24 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(12, 1fr);
-  gap: clamp(2px, 0.3vw, 4px);
-  width: clamp(36px, 6vw, 72px);
-  height: clamp(150px, 25vw, 300px);
+  gap: clamp(3px, 0.45vw, 6px);
+  width: clamp(56px, 9.2vw, 116px);
+  height: clamp(230px, 37vw, 470px);
 }
 
 .clock-colon {
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: repeat(12, 1fr);
-  gap: clamp(2px, 0.3vw, 4px);
-  width: clamp(10px, 1.6vw, 20px);
-  height: clamp(150px, 25vw, 300px);
+  gap: clamp(3px, 0.45vw, 6px);
+  width: clamp(14px, 2.4vw, 30px);
+  height: clamp(230px, 37vw, 470px);
 }
 
 .clock-digit span,
 .clock-colon span {
   background: transparent;
+  transition: background 0.22s ease;
 }
 
 .clock-digit span.on,
@@ -112,6 +114,7 @@ body {
   touch-action: none;
   padding: 132px 84px 134px;
   transition: transform 0.34s cubic-bezier(0.2, 0.72, 0.18, 1);
+  will-change: transform;
   z-index: 20;
 }
 
@@ -386,25 +389,30 @@ body {
   }
 
   #clock {
-    top: 100px;
+    top: 88px;
     width: 96vw;
     min-height: 280px;
   }
 
   #clock-text {
-    gap: clamp(3px, 0.8vw, 6px);
+    gap: clamp(6px, 1.6vw, 12px);
   }
 
   .clock-digit {
     gap: 3px;
-    width: clamp(52px, 13.5vw, 72px);
-    height: clamp(216px, 56vw, 300px);
+    width: clamp(60px, 15.5vw, 82px);
+    height: clamp(248px, 64vw, 340px);
   }
 
   .clock-colon {
     gap: 3px;
-    width: clamp(14px, 3.6vw, 20px);
-    height: clamp(216px, 56vw, 300px);
+    width: clamp(16px, 4.2vw, 22px);
+    height: clamp(248px, 64vw, 340px);
+  }
+
+  #glow {
+    top: 184px;
+    width: min(70vw, 200px);
   }
 
   #xiaoke {
@@ -881,29 +889,44 @@ function queueBubble(delay) {
   }, delay);
 }
 
+let clockInitialized = false;
+
 function updateClock() {
   const now = new Date();
-  const hh = String(now.getHours()).padStart(2, '0');
-  const mm = String(now.getMinutes()).padStart(2, '0');
-  const value = `${hh}:${mm}`;
-  clockText.innerHTML = '';
+  const value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
 
-  for (const char of value) {
-    const pattern = DIGITS[char];
-    const digit = document.createElement('div');
-    digit.className = char === ':' ? 'clock-colon' : 'clock-digit';
-
-    for (const row of pattern) {
-      for (const cell of row) {
-        const pixel = document.createElement('span');
-        if (cell === '1') {
-          pixel.className = 'on';
+  if (!clockInitialized) {
+    clockText.innerHTML = '';
+    for (const char of value) {
+      const digit = document.createElement('div');
+      digit.className = char === ':' ? 'clock-colon' : 'clock-digit';
+      for (const row of DIGITS[char]) {
+        for (const cell of row) {
+          const span = document.createElement('span');
+          if (cell === '1') span.className = 'on';
+          digit.appendChild(span);
         }
-        digit.appendChild(pixel);
+      }
+      clockText.appendChild(digit);
+    }
+    clockInitialized = true;
+    return;
+  }
+
+  let ci = 0;
+  for (const char of value) {
+    const digitEl = clockText.children[ci++];
+    const spans = digitEl.children;
+    let si = 0;
+    for (const row of DIGITS[char]) {
+      for (const cell of row) {
+        const wantOn = cell === '1';
+        if (wantOn !== (spans[si].className === 'on')) {
+          spans[si].className = wantOn ? 'on' : '';
+        }
+        si++;
       }
     }
-
-    clockText.appendChild(digit);
   }
 }
 
@@ -917,12 +940,16 @@ showBubble();
 setTimeout(showBubble, 7000);
 queueBubble(27000);
 
-// Floating music emoji
+// Floating emoji
 const pool = ['🎵','🎶','🎧','🎤','🎸','🎹','♪','♫','💛','🩷','💙','💚','🧡','❤️','💜'];
+const panicPool = ['❓','‼️','🆘','😱','⁉️','😵','⚠️','❗','🤯','💀','😰','🫨'];
+
 function spawnNote() {
+  const isPanic = dragging;
+  const activePool = isPanic ? panicPool : pool;
   const el = document.createElement('span');
   el.className = 'note';
-  el.textContent = pool[Math.floor(Math.random() * pool.length)];
+  el.textContent = activePool[Math.floor(Math.random() * activePool.length)];
 
   const rect = wrap.getBoundingClientRect();
   const cx = rect.left + rect.width / 2;
@@ -930,13 +957,13 @@ function spawnNote() {
   el.style.left = (cx + (Math.random() - 0.5) * rect.width * 0.9) + 'px';
   el.style.top  = (cy + (Math.random() - 0.5) * rect.height * 0.4) + 'px';
 
-  const dur = 3.2 + Math.random() * 2.8;
+  const dur = isPanic ? (1.4 + Math.random() * 1.2) : (3.2 + Math.random() * 2.8);
   el.style.animationDuration = dur + 's';
   el.style.fontSize = (24 + Math.random() * 24) + 'px';
 
   document.body.appendChild(el);
   setTimeout(() => el.remove(), (dur + 0.1) * 1000);
-  setTimeout(spawnNote, 1200 + Math.random() * 1600);
+  setTimeout(spawnNote, isPanic ? (300 + Math.random() * 500) : (1200 + Math.random() * 1600));
 }
 spawnNote();
 </script>
