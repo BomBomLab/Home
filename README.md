@@ -25,3 +25,16 @@ Source folder: `apps/clawd-deskpet`
 ## 获取源码 / Source Access
 如果你想查看或继续开发这些项目，把这个 GitHub 仓库连接发给你的claude即可。
 If you want the source code or want to continue development, use this GitHub repository directly.
+
+ # Personal Non-Commercial Use Notice
+  This repository is source-available, not open source.
+  1. The underlying IP, characters, brand elements, and related rights belong to their respective rightsholders.
+  2. This project is an unofficial fan-made derivative work.
+  3. Any original code or original material authored in this repository is shared for personal, non-commercial use
+  only.
+  4. You may view, study, and modify this repository for personal use.
+  5. You may not use this repository or any part of it for commercial purposes, including selling, licensing, paid
+  distribution, merchandise, or use in commercial products or services.
+  6. No trademark rights are granted.
+  7. If you are the relevant rightsholder and believe any content should be changed or removed, please contact the
+  repository owner.
