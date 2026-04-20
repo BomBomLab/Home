@@ -3,7 +3,6 @@
 🍠 小红书：魔法BomBom —— 小克周边，持续更新  
 🍠 Xiaohongshu: Magic BomBom — Clawd merch and side projects, continuously updated
 
-# 🏠 BomBomLab Home
 
 这里收集了我开发的 Clawd 周边产品，包括克克时钟、小克桌宠，以及后续会持续扩展的新项目。
 
@@ -33,7 +32,7 @@ Clawd stays on your desktop, moves around, vibes with music, and keeps you compa
 
 Source folder: `apps/clawd-deskpet`
 
-## 💻 小克桌宠安装方式 / How To Install Clawd Deskpet
+#### 💻 小克桌宠安装方式 / How To Install Clawd Deskpet
 
 如果你不想折腾开发环境，直接下载或 clone 本项目到本地，然后双击打开：
 
@@ -53,7 +52,7 @@ If macOS blocks the first launch:
 1. Right-click the app and choose `Open`
 2. If it is still blocked, allow it in `System Settings -> Privacy & Security`
 
-## 🔗 获取源码 / Source Access
+#### 🔗 获取源码 / Source Access
 
 如果你想查看源码、继续开发，或者让 Claude / Codex 帮你继续改，就把这个 GitHub 仓库链接直接发过去即可。
 
