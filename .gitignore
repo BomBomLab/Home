@@ -1,0 +1,14 @@
+.DS_Store
+node_modules/
+dist/
+coverage/
+*.log
+
+# App-local build artifacts
+apps/*/node_modules/
+apps/*/dist/
+
+# Environment files
+.env
+.env.*
+!.env.example
