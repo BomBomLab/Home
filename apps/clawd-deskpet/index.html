@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Clawd Deskpet</title>
 <style>
+:root {
+  --pet-scale: 0.75;
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html, body {
@@ -36,15 +40,20 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  width: 320px;
   cursor: grab;
   pointer-events: auto;
-  padding: 92px 40px 48px;
+  padding: 78px 48px 40px;
   will-change: transform;
 }
 
 #xiaoke-wrap.dragging {
   cursor: grabbing;
+}
+
+#xiaoke-wrap.hovering:not(.dragging) #glow {
+  opacity: 0.92;
+  transform: translateX(-50%) scale(1.08);
 }
 
 #xiaoke-wrap.dropping #glow,
@@ -153,6 +162,17 @@ body {
   transition: opacity 0.14s ease, transform 0.24s ease;
 }
 
+#pet-shell {
+  position: relative;
+  width: 210px;
+  height: 178px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transform: scale(var(--pet-scale));
+  transform-origin: center bottom;
+}
+
 #xiaoke {
   position: relative;
   z-index: 1;
@@ -185,6 +205,8 @@ body {
 
 #xiaoke-wrap.dragging #arm-left { animation: panic-arm-l 0.34s steps(2) infinite; }
 #xiaoke-wrap.dragging #arm-right { animation: panic-arm-r 0.28s steps(2) infinite; }
+#xiaoke-wrap.hovering:not(.dragging) #arm-left { animation: hover-arm-l 0.72s ease-in-out infinite alternate; }
+#xiaoke-wrap.hovering:not(.dragging) #arm-right { animation: hover-arm-r 0.72s ease-in-out infinite alternate; }
 
 @keyframes wave-l {
   0%, 100% { transform: rotate(0deg); }
@@ -210,6 +232,16 @@ body {
 @keyframes panic-arm-r {
   0%, 100% { transform: rotate(8deg); }
   50% { transform: rotate(44deg); }
+}
+
+@keyframes hover-arm-l {
+  0% { transform: rotate(-12deg) translateY(0); }
+  100% { transform: rotate(-40deg) translateY(-5px); }
+}
+
+@keyframes hover-arm-r {
+  0% { transform: rotate(10deg) translateY(0); }
+  100% { transform: rotate(42deg) translateY(-6px); }
 }
 
 .leg { transform-box: fill-box; transform-origin: center top; }
@@ -282,49 +314,51 @@ body {
         <p id="bubble-os"></p>
       </div>
     </div>
-    <div id="glow"></div>
-    <svg id="xiaoke" viewBox="0 0 700 538" width="210" height="161" aria-label="小克">
-      <rect x="88" y="40" width="40" height="101" fill="#3498D9"></rect>
-      <rect x="128" y="20" width="40" height="40" fill="#3498D9"></rect>
-      <rect x="167" y="0" width="361" height="40" fill="#3498D9"></rect>
-      <rect x="528" y="20" width="40" height="40" fill="#3498D9"></rect>
-      <rect x="568" y="40" width="40" height="101" fill="#3498D9"></rect>
-      <rect x="59" y="141" width="50" height="159" fill="#3498D9"></rect>
-      <rect x="19" y="170" width="40" height="101" fill="#3498D9"></rect>
-      <rect x="591" y="141" width="50" height="159" fill="#3498D9"></rect>
-      <rect x="638" y="170" width="40" height="101" fill="#3498D9"></rect>
-      <rect x="109" y="141" width="482" height="317" fill="#E37E52"></rect>
-      <g id="arm-left">
-        <rect x="0" y="300" width="109" height="81" fill="#E37E52"></rect>
-      </g>
-      <g id="arm-right">
-        <rect x="591" y="259" width="109" height="81" fill="#E37E52"></rect>
-      </g>
-      <g id="leg-1" class="leg">
-        <rect x="148" y="458" width="40" height="40" fill="#E37E52"></rect>
-        <rect x="138" y="498" width="40" height="40" fill="#E37E52"></rect>
-      </g>
-      <g id="leg-2" class="leg">
-        <rect x="227" y="458" width="40" height="40" fill="#E37E52"></rect>
-        <rect x="217" y="498" width="40" height="40" fill="#E37E52"></rect>
-      </g>
-      <g id="leg-3" class="leg">
-        <rect x="429" y="458" width="40" height="40" fill="#E37E52"></rect>
-        <rect x="419" y="498" width="40" height="40" fill="#E37E52"></rect>
-      </g>
-      <g id="leg-4" class="leg">
-        <rect x="508" y="458" width="40" height="40" fill="#E37E52"></rect>
-        <rect x="498" y="498" width="40" height="40" fill="#E37E52"></rect>
-      </g>
-      <rect class="eye-inner" x="158" y="196" width="40" height="40" fill="#111111"></rect>
-      <rect class="eye-inner" x="197" y="196" width="40" height="40" fill="#111111"></rect>
-      <rect class="eye-outer" x="118" y="196" width="40" height="40" fill="#111111"></rect>
-      <rect class="eye-outer" x="237" y="196" width="40" height="40" fill="#111111"></rect>
-      <rect class="eye-inner" x="459" y="196" width="40" height="40" fill="#111111"></rect>
-      <rect class="eye-inner" x="498" y="196" width="40" height="40" fill="#111111"></rect>
-      <rect class="eye-outer" x="419" y="196" width="40" height="40" fill="#111111"></rect>
-      <rect class="eye-outer" x="538" y="196" width="40" height="40" fill="#111111"></rect>
-    </svg>
+    <div id="pet-shell">
+      <div id="glow"></div>
+      <svg id="xiaoke" viewBox="0 0 700 538" width="210" height="161" aria-label="小克">
+        <rect x="88" y="40" width="40" height="101" fill="#3498D9"></rect>
+        <rect x="128" y="20" width="40" height="40" fill="#3498D9"></rect>
+        <rect x="167" y="0" width="361" height="40" fill="#3498D9"></rect>
+        <rect x="528" y="20" width="40" height="40" fill="#3498D9"></rect>
+        <rect x="568" y="40" width="40" height="101" fill="#3498D9"></rect>
+        <rect x="59" y="141" width="50" height="159" fill="#3498D9"></rect>
+        <rect x="19" y="170" width="40" height="101" fill="#3498D9"></rect>
+        <rect x="591" y="141" width="50" height="159" fill="#3498D9"></rect>
+        <rect x="638" y="170" width="40" height="101" fill="#3498D9"></rect>
+        <rect x="109" y="141" width="482" height="317" fill="#E37E52"></rect>
+        <g id="arm-left">
+          <rect x="0" y="300" width="109" height="81" fill="#E37E52"></rect>
+        </g>
+        <g id="arm-right">
+          <rect x="591" y="259" width="109" height="81" fill="#E37E52"></rect>
+        </g>
+        <g id="leg-1" class="leg">
+          <rect x="148" y="458" width="40" height="40" fill="#E37E52"></rect>
+          <rect x="138" y="498" width="40" height="40" fill="#E37E52"></rect>
+        </g>
+        <g id="leg-2" class="leg">
+          <rect x="227" y="458" width="40" height="40" fill="#E37E52"></rect>
+          <rect x="217" y="498" width="40" height="40" fill="#E37E52"></rect>
+        </g>
+        <g id="leg-3" class="leg">
+          <rect x="429" y="458" width="40" height="40" fill="#E37E52"></rect>
+          <rect x="419" y="498" width="40" height="40" fill="#E37E52"></rect>
+        </g>
+        <g id="leg-4" class="leg">
+          <rect x="508" y="458" width="40" height="40" fill="#E37E52"></rect>
+          <rect x="498" y="498" width="40" height="40" fill="#E37E52"></rect>
+        </g>
+        <rect class="eye-inner" x="158" y="196" width="40" height="40" fill="#111111"></rect>
+        <rect class="eye-inner" x="197" y="196" width="40" height="40" fill="#111111"></rect>
+        <rect class="eye-outer" x="118" y="196" width="40" height="40" fill="#111111"></rect>
+        <rect class="eye-outer" x="237" y="196" width="40" height="40" fill="#111111"></rect>
+        <rect class="eye-inner" x="459" y="196" width="40" height="40" fill="#111111"></rect>
+        <rect class="eye-inner" x="498" y="196" width="40" height="40" fill="#111111"></rect>
+        <rect class="eye-outer" x="419" y="196" width="40" height="40" fill="#111111"></rect>
+        <rect class="eye-outer" x="538" y="196" width="40" height="40" fill="#111111"></rect>
+      </svg>
+    </div>
   </div>
 </div>
 
@@ -459,7 +493,7 @@ function startDrag(event) {
   dragging = true;
   autoOffsetX = 0;
   wrap.classList.add('dragging');
-  window.petWindow.setIgnoreMouseEvents(false);
+  wrap.classList.remove('hovering');
   window.petWindow.startWindowDrag(event.screenX, event.screenY);
 }
 
@@ -472,7 +506,7 @@ function stopDrag() {
   wrap.classList.add('dropping');
   triggerSquash();
   setTimeout(() => wrap.classList.remove('dropping'), 220);
-  window.petWindow.setIgnoreMouseEvents(true);
+  window.petWindow.stopWindowDrag();
 }
 
 function handlePointerDown(event) {
@@ -535,10 +569,14 @@ function spawnNote() {
   setTimeout(spawnNote, dragging ? (280 + Math.random() * 420) : (1100 + Math.random() * 1200));
 }
 
-wrap.addEventListener('pointerenter', () => window.petWindow.setIgnoreMouseEvents(false));
+wrap.addEventListener('pointerenter', () => {
+  if (!dragging) {
+    wrap.classList.add('hovering');
+  }
+});
 wrap.addEventListener('pointerleave', () => {
   if (!dragging) {
-    window.petWindow.setIgnoreMouseEvents(true);
+    wrap.classList.remove('hovering');
   }
 });
 wrap.addEventListener('pointerdown', handlePointerDown);

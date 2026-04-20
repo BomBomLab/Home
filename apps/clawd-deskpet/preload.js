@@ -9,5 +9,8 @@ contextBridge.exposeInMainWorld('petWindow', {
   },
   dragWindow(screenX, screenY) {
     ipcRenderer.send('pet:drag-window', { screenX, screenY });
+  },
+  stopWindowDrag() {
+    ipcRenderer.send('pet:stop-window-drag');
   }
 });
