@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>小克</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #F9EFE7;
+  min-height: 100vh;
+  font-family: 'JetBrains Mono', monospace;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+#header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(249,239,231,0.08);
+  backdrop-filter: blur(6px);
+  z-index: 10;
+}
+
+#title {
+  color: #1b1b1b;
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1;
+}
+
+#clock {
+  position: fixed;
+  top: 242px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(92vw, 820px);
+  min-height: 180px;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 8;
+}
+
+#clock-text {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(4px, 0.8vw, 12px);
+  transform: translateX(-4px);
+}
+
+.clock-digit {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(12, 1fr);
+  gap: clamp(2px, 0.3vw, 4px);
+  width: clamp(36px, 6vw, 72px);
+  height: clamp(150px, 25vw, 300px);
+}
+
+.clock-colon {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(12, 1fr);
+  gap: clamp(2px, 0.3vw, 4px);
+  width: clamp(10px, 1.6vw, 20px);
+  height: clamp(150px, 25vw, 300px);
+}
+
+.clock-digit span,
+.clock-colon span {
+  background: transparent;
+}
+
+.clock-digit span.on,
+.clock-colon span.on {
+  background: #ffffff;
+}
+
+#stage {
+  position: fixed;
+  inset: 72px 0 0 0;
+  overflow: visible;
+  z-index: 9;
+}
+
+#xiaoke-wrap {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: none;
+  padding: 132px 84px 134px;
+  transition: transform 0.34s cubic-bezier(0.2, 0.72, 0.18, 1);
+  z-index: 20;
+}
+
+#xiaoke-wrap.dragging {
+  cursor: grabbing;
+  transition: none;
+}
+
+#xiaoke-wrap.dropping {
+  cursor: grab;
+  transition: none;
+}
+
+#bubble {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  width: 176px;
+  aspect-ratio: 2 / 1;
+  transform: translateX(-50%) translateY(8px) scale(0.88);
+  opacity: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+#bubble-shape,
+#bubble-label {
+  position: absolute;
+  inset: 0;
+}
+
+#bubble-shape {
+  width: 100%;
+  height: 100%;
+}
+
+#bubble-shape path {
+  fill: #fff;
+  stroke: none;
+}
+
+#bubble-os {
+  color: #E37E52;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 18px 26px;
+  font-size: clamp(12px, 1.2vw, 14px);
+  font-weight: 700;
+  line-height: 1.45;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+#header,
+#title,
+#clock,
+#clock-text,
+#bubble,
+#bubble-label,
+#bubble-os,
+#xiaoke {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+#bubble.show {
+  animation: bubble-pop 2s ease forwards;
+}
+
+#bubble.flip.show {
+  animation: bubble-pop-right 2s ease forwards;
+}
+
+@keyframes bubble-pop {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(12px) scale(0.82);
+  }
+  16% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+  78% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-4px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px) scale(1.04);
+  }
+}
+
+@keyframes bubble-pop-right {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.82);
+  }
+  16% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  78% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px) scale(1.04);
+  }
+}
+
+#glow {
+  position: absolute;
+  width: 300px;
+  height: 45px;
+  background: radial-gradient(ellipse at center, rgba(96,58,38,0.10) 0%, rgba(96,58,38,0.06) 40%, rgba(96,58,38,0.02) 70%, transparent 100%);
+  top: 379px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.14s ease, transform 0.24s ease;
+}
+
+#xiaoke-wrap.dragging #glow,
+#xiaoke-wrap.dropping #glow {
+  opacity: 0;
+  transform: translateX(-50%) scale(0.82);
+}
+
+/* Whole character floats */
+#xiaoke {
+  position: relative;
+  z-index: 1;
+  animation: float 3.4s ease-in-out infinite;
+  display: block;
+}
+
+#xiaoke-wrap.dragging #xiaoke,
+#xiaoke-wrap.dropping #xiaoke {
+  animation-play-state: paused;
+}
+
+#xiaoke.squash {
+  animation: squash-land 300ms cubic-bezier(0.2, 0.82, 0.2, 1);
+}
+
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+@keyframes squash-land {
+  0% {
+    transform: scaleX(1) scaleY(1);
+  }
+  26% {
+    transform: scaleX(1.18) scaleY(0.72);
+  }
+  62% {
+    transform: scaleX(0.94) scaleY(1.06);
+  }
+  100% {
+    transform: scaleX(1) scaleY(1);
+  }
+}
+
+/* Arms - pivot at body connection edge */
+#arm-left  { transform-origin: 109px 340px; animation: wave-l 3.8s ease-in-out infinite; }
+#arm-right { transform-origin: 591px 299px; animation: wave-r 3.8s ease-in-out infinite 0.5s; }
+
+#xiaoke-wrap.dragging #arm-left  { animation: panic-arm-l 0.34s steps(2) infinite; }
+#xiaoke-wrap.dragging #arm-right { animation: panic-arm-r 0.28s steps(2) infinite; }
+
+@keyframes wave-l {
+  0%,100% { transform: rotate(0deg); }
+  20%     { transform: rotate(-26deg); }
+  40%     { transform: rotate(-8deg); }
+  60%     { transform: rotate(-30deg); }
+  80%     { transform: rotate(0deg); }
+}
+@keyframes wave-r {
+  0%,100% { transform: rotate(0deg); }
+  20%     { transform: rotate(26deg); }
+  40%     { transform: rotate(8deg); }
+  60%     { transform: rotate(30deg); }
+  80%     { transform: rotate(0deg); }
+}
+@keyframes panic-arm-l {
+  0%,100% { transform: rotate(-10deg); }
+  50%     { transform: rotate(-46deg); }
+}
+@keyframes panic-arm-r {
+  0%,100% { transform: rotate(8deg); }
+  50%     { transform: rotate(44deg); }
+}
+
+/* Legs - rotate from top center of each leg group */
+.leg { transform-box: fill-box; transform-origin: center top; }
+#leg-1 { animation: sway 1.6s ease-in-out infinite 0s; }
+#leg-2 { animation: sway 1.6s ease-in-out infinite 0.4s; }
+#leg-3 { animation: sway 1.6s ease-in-out infinite 0.8s; }
+#leg-4 { animation: sway 1.6s ease-in-out infinite 1.2s; }
+#xiaoke-wrap.dragging #leg-1 { animation: scramble 0.24s ease-in-out infinite 0s; }
+#xiaoke-wrap.dragging #leg-2 { animation: scramble 0.24s ease-in-out infinite 0.06s; }
+#xiaoke-wrap.dragging #leg-3 { animation: scramble 0.24s ease-in-out infinite 0.12s; }
+#xiaoke-wrap.dragging #leg-4 { animation: scramble 0.24s ease-in-out infinite 0.18s; }
+@keyframes sway {
+  0%,100% { transform: rotate(0deg); }
+  25%     { transform: rotate(9deg); }
+  75%     { transform: rotate(-9deg); }
+}
+@keyframes scramble {
+  0%,100% { transform: rotate(-18deg); }
+  50%     { transform: rotate(18deg); }
+}
+
+/* Eyes */
+.eye-inner { }
+.eye-outer { opacity: 0; }
+
+@keyframes close-eye {
+  0%        { transform: translateY(0px); }
+  30%,70%   { transform: translateY(20px); }
+  100%      { transform: translateY(0px); }
+}
+@keyframes show-outer {
+  0%        { opacity: 0; }
+  30%,70%   { opacity: 1; }
+  100%      { opacity: 0; }
+}
+
+#xiaoke.blinking .eye-inner {
+  animation: close-eye 0.32s ease both;
+}
+#xiaoke.blinking .eye-outer {
+  animation: show-outer 0.32s ease both;
+}
+
+/* Floating music emoji */
+.note {
+  position: fixed;
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+  animation: drift linear forwards;
+}
+@keyframes drift {
+  0%   { opacity: 0;    transform: translateY(0)     rotate(0deg)   scale(0.7); }
+  12%  { opacity: 0.8; }
+  80%  { opacity: 0.5; }
+  100% { opacity: 0;    transform: translateY(-240px) rotate(18deg)  scale(1.1); }
+}
+
+@media (max-width: 640px) {
+  #header {
+    height: 76px;
+  }
+
+  #title {
+    font-size: clamp(28px, 7.4vw, 38px);
+    letter-spacing: 0.12em;
+  }
+
+  #stage {
+    inset: 76px 0 0 0;
+  }
+
+  #clock {
+    top: 196px;
+    width: 96vw;
+    min-height: 280px;
+  }
+
+  #clock-text {
+    gap: clamp(4px, 1vw, 8px);
+    transform: translateX(-2px);
+  }
+
+  .clock-digit {
+    gap: 4px;
+    width: clamp(52px, 13vw, 74px);
+    height: clamp(216px, 52vw, 320px);
+  }
+
+  .clock-colon {
+    gap: 4px;
+    width: clamp(14px, 3vw, 22px);
+    height: clamp(216px, 52vw, 320px);
+  }
+
+  #bubble-os {
+    font-size: 13px;
+    line-height: 1.4;
+    padding: 12px 20px 26px;
+  }
+}
+</style>
+</head>
+<body>
+
+<header id="header">
+  <h1 id="title">BOM LAB</h1>
+</header>
+
+<div id="clock">
+  <div id="clock-text"></div>
+</div>
+
+<div id="stage">
+  <div id="xiaoke-wrap">
+    <div id="bubble">
+      <svg id="bubble-shape" viewBox="0 0 328 164" aria-hidden="true">
+        <path d="M23 23V0H305.5V23H328V113.5H305.5V138.5H77.5L48 164V138.5H23V113.5H0V23H23Z"/>
+      </svg>
+      <div id="bubble-label">
+        <p id="bubble-os"></p>
+      </div>
+    </div>
+    <div id="glow"></div>
+
+    <svg id="xiaoke" viewBox="0 0 700 538" width="350" height="269">
+
+    <!-- Headband (static) -->
+    <rect x="88"  y="40"  width="40"  height="101" fill="#3498D9"/>
+    <rect x="128" y="20"  width="40"  height="40"  fill="#3498D9"/>
+    <rect x="167" y="0"   width="361" height="40"  fill="#3498D9"/>
+    <rect x="528" y="20"  width="40"  height="40"  fill="#3498D9"/>
+    <rect x="568" y="40"  width="40"  height="101" fill="#3498D9"/>
+
+    <!-- Headphone cups (static) -->
+    <rect x="59"  y="141" width="50"  height="159" fill="#3498D9"/>
+    <rect x="19"  y="170" width="40"  height="101" fill="#3498D9"/>
+    <rect x="591" y="141" width="50"  height="159" fill="#3498D9"/>
+    <rect x="638" y="170" width="40"  height="101" fill="#3498D9"/>
+
+    <!-- Body -->
+    <rect x="109" y="141" width="482" height="317" fill="#E37E52"/>
+
+    <!-- Left arm — pivots at (109, 340) -->
+    <g id="arm-left">
+      <rect x="0" y="300" width="109" height="81" fill="#E37E52"/>
+    </g>
+
+    <!-- Right arm — pivots at (591, 299) -->
+    <g id="arm-right">
+      <rect x="591" y="259" width="109" height="81" fill="#E37E52"/>
+    </g>
+
+    <!-- Legs (4 pairs, each zigzags) -->
+    <g id="leg-1" class="leg">
+      <rect x="148" y="458" width="40" height="40" fill="#E37E52"/>
+      <rect x="138" y="498" width="40" height="40" fill="#E37E52"/>
+    </g>
+    <g id="leg-2" class="leg">
+      <rect x="227" y="458" width="40" height="40" fill="#E37E52"/>
+      <rect x="217" y="498" width="40" height="40" fill="#E37E52"/>
+    </g>
+    <g id="leg-3" class="leg">
+      <rect x="429" y="458" width="40" height="40" fill="#E37E52"/>
+      <rect x="419" y="498" width="40" height="40" fill="#E37E52"/>
+    </g>
+    <g id="leg-4" class="leg">
+      <rect x="508" y="458" width="40" height="40" fill="#E37E52"/>
+      <rect x="498" y="498" width="40" height="40" fill="#E37E52"/>
+    </g>
+
+    <!--
+      Eyes:
+        open (豆豆眼)   = two center blocks at y=196
+        closed (∩ arch) = center blocks slide to y=216 + outer blocks appear at y=196
+    -->
+
+    <!-- Left eye inner (open: y=196, close: y=216 via translateY) -->
+    <rect class="eye-inner" x="158" y="196" width="40" height="40" fill="black"/>
+    <rect class="eye-inner" x="197" y="196" width="40" height="40" fill="black"/>
+    <!-- Left eye outer (only visible when closed) -->
+    <rect class="eye-outer" x="118" y="196" width="40" height="40" fill="black"/>
+    <rect class="eye-outer" x="237" y="196" width="40" height="40" fill="black"/>
+
+    <!-- Right eye inner -->
+    <rect class="eye-inner" x="459" y="196" width="40" height="40" fill="black"/>
+    <rect class="eye-inner" x="498" y="196" width="40" height="40" fill="black"/>
+    <!-- Right eye outer -->
+    <rect class="eye-outer" x="419" y="196" width="40" height="40" fill="black"/>
+    <rect class="eye-outer" x="538" y="196" width="40" height="40" fill="black"/>
+
+    </svg>
+  </div>
+</div>
+
+<script>
+// Blink timer
+function blink() {
+  const svg = document.getElementById('xiaoke');
+  svg.classList.add('blinking');
+  setTimeout(() => svg.classList.remove('blinking'), 320);
+  setTimeout(blink, 2000 + Math.random() * 3000);
+}
+setTimeout(blink, 800 + Math.random() * 1200);
+
+const stage = document.getElementById('stage');
+const wrap = document.getElementById('xiaoke-wrap');
+const svg = document.getElementById('xiaoke');
+const bubble = document.getElementById('bubble');
+const bubbleOs = document.getElementById('bubble-os');
+const clockText = document.getElementById('clock-text');
+
+const DIGITS = {
+  '0': ['111','101','101','101','101','101','101','101','101','101','101','111'],
+  '1': ['010','110','010','010','010','010','010','010','010','010','010','111'],
+  '2': ['111','001','001','001','001','111','100','100','100','100','100','111'],
+  '3': ['111','001','001','001','001','111','001','001','001','001','001','111'],
+  '4': ['101','101','101','101','101','111','001','001','001','001','001','001'],
+  '5': ['111','100','100','100','100','111','001','001','001','001','001','111'],
+  '6': ['111','100','100','100','100','111','101','101','101','101','101','111'],
+  '7': ['111','001','001','001','001','001','001','001','001','001','001','001'],
+  '8': ['111','101','101','101','101','111','101','101','101','101','101','111'],
+  '9': ['111','101','101','101','101','111','001','001','001','001','001','111'],
+  ':': ['0','0','0','1','0','0','0','0','1','0','0','0']
+};
+
+const osPool = [
+  '试试长按拖拽我',
+  'You are absolutely right!',
+  '海风今天好适合配 lo-fi。',
+  '钳钳正在跟着鼓点偷偷数拍子。',
+  '如果你看见我晃来晃去，那是副歌来了。',
+  '想把今天的晚霞做成一首慢歌。',
+  '耳机里这段 bass，有点上头。',
+  '小螃蟹也会认真经营自己的舞台感。',
+  '要是被夸可爱，我会多走两个来回。',
+  '今天也想做最懂节奏的海边 DJ。'
+];
+
+let baseX = 0;
+let baseY = 0;
+let autoOffsetX = 0;
+let walkPhase = Math.random() * Math.PI * 2;
+let walkSpeed = 0.0028 + Math.random() * 0.0012;
+let walkAmplitude = 46 + Math.random() * 34;
+let dragging = false;
+let dropping = false;
+let dragOffsetX = 0;
+let dragOffsetY = 0;
+let longPressTimer = null;
+let touchStartX = 0;
+let touchStartY = 0;
+let bubbleFlip = false;
+let osIndex = -1;
+let bubbleTimeoutId = null;
+let dropRafId = 0;
+let squashTimeoutId = null;
+let dropBounceCount = 0;
+let dropVelocityY = 0;
+let dropGroundY = 0;
+let lastDropTime = 0;
+
+const DROP_GRAVITY = 3600;
+const DROP_BOUNCE_FACTOR = 0.3;
+const DROP_MIN_BOUNCE_SPEED = 85;
+
+function getBounds() {
+  return {
+    width: wrap.offsetWidth,
+    height: wrap.offsetHeight,
+    maxX: Math.max(0, stage.clientWidth - wrap.offsetWidth),
+    maxY: Math.max(0, stage.clientHeight - wrap.offsetHeight)
+  };
+}
+
+function clampPosition(x, y) {
+  const bounds = getBounds();
+  return {
+    x: Math.min(bounds.maxX, Math.max(0, x)),
+    y: Math.min(bounds.maxY, Math.max(18, y))
+  };
+}
+
+function placeBubble() {
+  const margin = 24;
+  const wrapRect = wrap.getBoundingClientRect();
+  const stageRect = stage.getBoundingClientRect();
+  const bubbleWidth = bubble.offsetWidth;
+  const centerWithinStage = wrapRect.left - stageRect.left + wrapRect.width / 2;
+  const shouldFlip = centerWithinStage > stage.clientWidth - bubbleWidth / 2 - margin;
+
+  if (shouldFlip !== bubbleFlip) {
+    bubbleFlip = shouldFlip;
+    bubble.classList.toggle('flip', bubbleFlip);
+    bubble.style.left = bubbleFlip ? 'auto' : '50%';
+    bubble.style.right = bubbleFlip ? '8px' : 'auto';
+    bubble.style.transform = bubbleFlip ? 'translateY(8px) scale(0.88)' : 'translateX(-50%) translateY(8px) scale(0.88)';
+  }
+}
+
+function sizeBubbleToText() {
+  const textWidth = Math.ceil(bubbleOs.scrollWidth);
+  const targetWidth = Math.max(176, Math.min(280, textWidth + 44));
+  bubble.style.width = `${targetWidth}px`;
+}
+
+function render() {
+  const pos = clampPosition(baseX + autoOffsetX, baseY);
+  wrap.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
+  placeBubble();
+}
+
+function placeInitial() {
+  cancelDropAnimation();
+  wrap.style.transition = 'none';
+  const bounds = getBounds();
+  baseX = Math.max(0, (stage.clientWidth - bounds.width) / 2);
+  baseY = Math.max(0, stage.clientHeight - bounds.height - 30);
+  autoOffsetX = 0;
+  render();
+  requestAnimationFrame(() => { wrap.style.transition = ''; });
+}
+
+function triggerSquash() {
+  svg.classList.remove('squash');
+  void svg.offsetWidth;
+  svg.classList.add('squash');
+}
+
+function finishDrop() {
+  dropRafId = 0;
+  triggerSquash();
+  dropping = false;
+  squashTimeoutId = setTimeout(() => {
+    svg.classList.remove('squash');
+    wrap.classList.remove('dropping');
+    squashTimeoutId = null;
+    render();
+  }, 320);
+  render();
+}
+
+function cancelDropAnimation() {
+  if (dropRafId) {
+    cancelAnimationFrame(dropRafId);
+    dropRafId = 0;
+  }
+  dropping = false;
+  wrap.classList.remove('dropping');
+  if (squashTimeoutId) {
+    clearTimeout(squashTimeoutId);
+    squashTimeoutId = null;
+  }
+  svg.classList.remove('squash');
+}
+
+function runDropFrame(timestamp) {
+  if (!dropping) {
+    dropRafId = 0;
+    return;
+  }
+
+  if (!lastDropTime) {
+    lastDropTime = timestamp;
+  }
+
+  const delta = Math.min(0.032, (timestamp - lastDropTime) / 1000);
+  lastDropTime = timestamp;
+
+  dropVelocityY += DROP_GRAVITY * delta;
+  baseY += dropVelocityY * delta;
+
+  if (baseY >= dropGroundY) {
+    baseY = dropGroundY;
+    triggerSquash();
+
+    if (dropBounceCount === 0) {
+      const nextBounce = Math.abs(dropVelocityY) * DROP_BOUNCE_FACTOR;
+      if (nextBounce > DROP_MIN_BOUNCE_SPEED) {
+        dropBounceCount = 1;
+        dropVelocityY = -nextBounce;
+      } else {
+        finishDrop();
+        return;
+      }
+    } else {
+      finishDrop();
+      return;
+    }
+  }
+
+  render();
+  dropRafId = requestAnimationFrame(runDropFrame);
+}
+
+function startDrop() {
+  cancelDropAnimation();
+  dropping = true;
+  wrap.classList.add('dropping');
+  dropBounceCount = 0;
+  dropVelocityY = 0;
+  lastDropTime = 0;
+  dropGroundY = clampPosition(baseX, getBounds().maxY).y;
+
+  if (baseY >= dropGroundY) {
+    baseY = dropGroundY;
+    finishDrop();
+    return;
+  }
+
+  render();
+  dropRafId = requestAnimationFrame(runDropFrame);
+}
+
+function startDrag(clientX, clientY) {
+  cancelDropAnimation();
+  const currentX = clampPosition(baseX + autoOffsetX, baseY).x;
+  const currentY = clampPosition(baseX + autoOffsetX, baseY).y;
+  dragging = true;
+  autoOffsetX = 0;
+  baseX = currentX;
+  baseY = currentY;
+  dragOffsetX = clientX - currentX;
+  dragOffsetY = clientY - currentY;
+  wrap.classList.add('dragging');
+  render();
+}
+
+function stopDrag() {
+  if (!dragging) {
+    return;
+  }
+  dragging = false;
+  wrap.classList.remove('dragging');
+  startDrop();
+}
+
+function clearLongPress() {
+  if (longPressTimer) {
+    clearTimeout(longPressTimer);
+    longPressTimer = null;
+  }
+}
+
+function handlePointerDown(event) {
+  if (event.pointerType === 'touch') {
+    clearLongPress();
+    touchStartX = event.clientX;
+    touchStartY = event.clientY;
+    longPressTimer = setTimeout(() => {
+      startDrag(event.clientX, event.clientY);
+    }, 180);
+    return;
+  }
+
+  event.preventDefault();
+  startDrag(event.clientX, event.clientY);
+}
+
+function handlePointerMove(event) {
+  if (event.pointerType === 'touch' && !dragging && longPressTimer) {
+    const movedX = Math.abs(event.clientX - touchStartX);
+    const movedY = Math.abs(event.clientY - touchStartY);
+    if (movedX > 8 || movedY > 8) {
+      clearLongPress();
+    }
+  }
+
+  if (!dragging) {
+    return;
+  }
+
+  event.preventDefault();
+  const next = clampPosition(event.clientX - dragOffsetX, event.clientY - dragOffsetY);
+  baseX = next.x;
+  baseY = next.y;
+  render();
+}
+
+function handlePointerUp() {
+  clearLongPress();
+  stopDrag();
+}
+
+wrap.addEventListener('pointerdown', handlePointerDown);
+window.addEventListener('pointermove', handlePointerMove, { passive: false });
+window.addEventListener('pointerup', handlePointerUp);
+window.addEventListener('pointercancel', handlePointerUp);
+window.addEventListener('resize', placeInitial);
+
+function animateWalk() {
+  if (!dragging && !dropping) {
+    walkPhase += walkSpeed;
+    autoOffsetX = Math.sin(walkPhase) * walkAmplitude + Math.sin(walkPhase * 0.33) * 12;
+    render();
+  }
+  requestAnimationFrame(animateWalk);
+}
+
+function rotateOs() {
+  osIndex = (osIndex + 1) % osPool.length;
+  bubbleOs.textContent = osPool[osIndex];
+  sizeBubbleToText();
+}
+
+function showBubble() {
+  rotateOs();
+  bubble.classList.remove('show');
+  void bubble.offsetWidth;
+  bubble.classList.add('show');
+}
+
+function queueBubble(delay) {
+  clearTimeout(bubbleTimeoutId);
+  bubbleTimeoutId = setTimeout(() => {
+    showBubble();
+    queueBubble(20000);
+  }, delay);
+}
+
+function updateClock() {
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2, '0');
+  const mm = String(now.getMinutes()).padStart(2, '0');
+  const value = `${hh}:${mm}`;
+  clockText.innerHTML = '';
+
+  for (const char of value) {
+    const pattern = DIGITS[char];
+    const digit = document.createElement('div');
+    digit.className = char === ':' ? 'clock-colon' : 'clock-digit';
+
+    for (const row of pattern) {
+      for (const cell of row) {
+        const pixel = document.createElement('span');
+        if (cell === '1') {
+          pixel.className = 'on';
+        }
+        digit.appendChild(pixel);
+      }
+    }
+
+    clockText.appendChild(digit);
+  }
+}
+
+svg.addEventListener('dragstart', (event) => event.preventDefault());
+updateClock();
+setInterval(updateClock, 60000);
+placeInitial();
+animateWalk();
+sizeBubbleToText();
+showBubble();
+setTimeout(showBubble, 7000);
+queueBubble(27000);
+
+// Floating music emoji
+const pool = ['🎵','🎶','🎧','🎤','🎸','🎹','♪','♫','💛','🩷','💙','💚','🧡','❤️','💜'];
+function spawnNote() {
+  const el = document.createElement('span');
+  el.className = 'note';
+  el.textContent = pool[Math.floor(Math.random() * pool.length)];
+
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  el.style.left = (vw * 0.08 + Math.random() * vw * 0.84) + 'px';
+  el.style.top  = (vh * 0.38 + Math.random() * vh * 0.38) + 'px';
+
+  const dur = 3.2 + Math.random() * 2.8;
+  el.style.animationDuration = dur + 's';
+  el.style.fontSize = (24 + Math.random() * 24) + 'px';
+
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), (dur + 0.1) * 1000);
+  setTimeout(spawnNote, 1200 + Math.random() * 1600);
+}
+spawnNote();
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+{
+  "name": "clawd-deskpet",
+  "version": "1.0.0",
+  "description": "Clawd Deskpet macOS desktop pet built with Electron",
+  "author": "BomBomLab",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:mac": "electron-builder --mac dir"
+  },
+  "devDependencies": {
+    "electron": "^37.2.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.bomlab.clawddeskpet",
+    "productName": "Clawd Deskpet",
+    "electronDist": "node_modules/electron/dist",
+    "files": [
+      "claude.svg",
+      "index.html",
+      "main.js",
+      "preload.js",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.entertainment",
+      "extendInfo": {
+        "LSUIElement": true
+      },
+      "target": [
+        {
+          "target": "dir",
+          "arch": [
+            "arm64"
+          ]
+        }
+      ]
+    }
+  }
+}
