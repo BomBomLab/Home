@@ -36,19 +36,8 @@ You can also long-press and drag Clawd around for fun.
 
 最新 working Clawd 更新：
 - 打字时会切到独立的 working 姿态，小克会转身对着旁边电脑敲键盘
-- idle 与 working 的造型、眨眼、打字字母、气泡逻辑已经分开处理
-- 停止输入约 3 秒后，小克会从 working 回到 idle
 
 Star 这个仓库，后续会持续更新更多造型和版本。
-
-This is a macOS desktop pet app for macOS.  
-Clawd stays on your desktop, moves around, vibes with music, and keeps you company while you work.
-
-Latest working Clawd update:
-- typing now switches Clawd into a dedicated working pose facing a side computer
-- idle and working now use separate pose, blink, typing-letter, and bubble behavior
-- after about 3 seconds without typing, Clawd returns from working to idle
-
 Source folder: `apps/clawd-deskpet`
 
 #### 💻 小克桌宠安装方式 / How To Install Clawd Deskpet
