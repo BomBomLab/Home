@@ -3,219 +3,228 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>笔记实验室</title>
+  <title>笔记</title>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@300;400;500&family=Noto+Serif+SC:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #f7efe3;
-      --panel: rgba(252, 247, 241, 0.96);
-      --paper: #f8f1e6;
-      --paper-edge: #ddcbb5;
-      --ink: #2e2118;
-      --ink-soft: #635043;
-      --accent: #b96f41;
-      --accent-deep: #8f4c29;
-      --muted: #967f6d;
-      --line: rgba(116, 88, 64, 0.16);
-      --shadow:
-        0 2px 2px rgba(78, 52, 30, 0.06),
-        0 12px 18px rgba(78, 52, 30, 0.06),
-        0 32px 44px rgba(78, 52, 30, 0.09),
-        0 72px 96px rgba(78, 52, 30, 0.12);
-      --panel-width: 24rem;
+      /* Quiet ivory palette — warm but very low chroma */
+      --bg:           #f8f8f6;
+      --bg-soft:      #f0f0ec;
+      --paper:        #fbf8f2;
+      --ink:          #2a2825;
+      --ink-soft:     #6b6359;
+      --ink-faint:    #9c9287;
+      --rule:         rgba(60, 48, 34, 0.09);
+      --rule-strong:  rgba(60, 48, 34, 0.16);
+      --accent:       #c9784a;   /* warm orange, for the title and accents */
+      --accent-soft:  rgba(201, 120, 74, 0.14);
+
+      --serif:    "EB Garamond", "Noto Serif SC", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      --sans:     "Inter", "PingFang SC", "Helvetica Neue", system-ui, sans-serif;
+
+      --panel-width: 22rem;
       --paper-image-1: url("../../assets/paper1.jpg");
-      --paper-image-2: url("../../assets/paper2.jpg");
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    html,
-    body {
-      margin: 0;
-      min-height: 100%;
-    }
+    html, body { margin: 0; min-height: 100%; }
 
     body {
-      font-family: "Avenir Next", "PingFang SC", "Helvetica Neue", sans-serif;
+      font-family: var(--sans);
+      font-weight: 400;
       color: var(--ink);
       background: var(--bg);
-      scrollbar-width: none;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    body::-webkit-scrollbar {
-      display: none;
-    }
-
-    button,
-    input,
-    textarea {
-      font: inherit;
-    }
-
-    button {
-      border: 0;
-    }
+    button, input, textarea { font: inherit; color: inherit; }
+    button { border: 0; background: none; cursor: pointer; }
 
     .app {
       min-height: 100vh;
       display: flex;
-      position: relative;
-      overflow: visible;
     }
+
+    /* ---------- Left panel ---------- */
 
     .panel {
       width: var(--panel-width);
       flex: 0 0 var(--panel-width);
-      padding: 2rem;
-      background: var(--panel);
-      border-right: 1px solid rgba(132, 101, 76, 0.12);
-      box-shadow: 18px 0 36px -34px rgba(69, 44, 21, 0.55);
+      padding: 3rem 2.25rem 2rem;
+      background: var(--bg);
+      border-right: 1px solid var(--rule);
       display: flex;
       flex-direction: column;
-      gap: 1.6rem;
+      gap: 2rem;
       overflow-y: auto;
-      position: relative;
-      z-index: 2;
-    }
-
-    .panel::-webkit-scrollbar {
-      display: none;
-    }
-
-    .panel {
       scrollbar-width: none;
     }
+    .panel::-webkit-scrollbar { display: none; }
 
     .panel-header {
       display: flex;
       flex-direction: column;
-      gap: 0.35rem;
+      gap: 0.6rem;
     }
 
-    .eyebrow {
-      font-size: 0.68rem;
-      letter-spacing: 0.34em;
-      text-transform: uppercase;
-      color: var(--accent);
-      font-weight: 700;
+    .wordmark {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      color: var(--ink-soft);
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 0.95rem;
+      letter-spacing: 0.01em;
+    }
+    .wordmark .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0.7;
     }
 
     .panel-title {
       margin: 0;
-      font-family: "Baskerville", "Iowan Old Style", "Times New Roman", serif;
-      font-size: 2rem;
-      line-height: 0.95;
-      font-weight: 700;
-      letter-spacing: -0.05em;
-      color: #38251a;
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: 2.1rem;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--ink);
     }
 
     .panel-subtitle {
       margin: 0;
       color: var(--ink-soft);
-      line-height: 1.6;
-      font-size: 0.92rem;
+      line-height: 1.65;
+      font-size: 0.86rem;
+      font-weight: 400;
     }
 
     .fields {
       display: flex;
       flex-direction: column;
-      gap: 1.25rem;
+      gap: 1.5rem;
       flex: 1;
     }
 
     .field {
       display: flex;
       flex-direction: column;
-      gap: 0.45rem;
+      gap: 0.5rem;
     }
 
+    /* Quieter labels — no ALL CAPS, no aggressive tracking */
     .field label {
-      font-size: 0.62rem;
-      font-weight: 700;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--ink-faint);
+      letter-spacing: 0.02em;
+    }
+    .field label em {
+      font-family: var(--serif);
+      font-style: italic;
+      color: var(--ink-soft);
+      font-size: 0.82rem;
+      margin-left: 0.25rem;
     }
 
     .field input,
     .field textarea {
       width: 100%;
-      color: var(--ink);
-      background: rgba(255, 251, 245, 0.74);
-      border: 1px solid rgba(155, 122, 97, 0.16);
+      background: transparent;
+      border: 0;
+      border-bottom: 1px solid var(--rule-strong);
       outline: none;
-      transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+      padding: 0.55rem 0 0.65rem;
+      border-radius: 0;
+      transition: border-color 220ms ease;
+      color: var(--ink);
     }
 
     .field input {
-      padding: 0.9rem 1rem;
-      border-radius: 1rem;
-      font-family: "Baskerville", "Iowan Old Style", "Times New Roman", serif;
-      font-size: 1.05rem;
-      letter-spacing: 0.01em;
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      font-weight: 400;
+      letter-spacing: 0.005em;
     }
 
     .field textarea {
-      min-height: 8.5rem;
+      min-height: 7rem;
       resize: vertical;
-      padding: 1rem;
-      border-radius: 1rem;
-      line-height: 1.75;
-      font-size: 0.96rem;
+      font-family: var(--serif);
+      font-size: 0.98rem;
+      line-height: 1.7;
+      padding-top: 0.65rem;
+    }
+
+    .field textarea#notes-input {
+      font-style: italic;
+      color: var(--ink-soft);
+      min-height: 5rem;
+    }
+
+    .field input::placeholder,
+    .field textarea::placeholder {
+      color: var(--ink-faint);
+      opacity: 0.7;
+      font-style: italic;
     }
 
     .field input:focus,
     .field textarea:focus {
-      border-color: rgba(185, 111, 65, 0.48);
-      background: rgba(255, 252, 247, 0.95);
-      box-shadow: 0 0 0 4px rgba(185, 111, 65, 0.08);
+      border-bottom-color: var(--accent);
     }
 
     .actions {
-      display: grid;
-      grid-template-columns: auto 1fr 1fr;
-      gap: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--rule);
     }
 
-    .icon-button,
-    .ghost-button,
-    .primary-button {
-      min-height: 3rem;
-      border-radius: 999px;
-      cursor: pointer;
-      transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease, color 160ms ease;
-    }
-
-    .icon-button:hover,
-    .ghost-button:hover,
-    .primary-button:hover,
-    .expand-button:hover {
-      transform: translateY(-1px);
-    }
-
-    .icon-button {
-      width: 3rem;
-      background: rgba(255, 248, 239, 0.9);
-      border: 1px solid rgba(143, 76, 41, 0.12);
+    .link-button {
+      font-size: 0.83rem;
       color: var(--ink-soft);
-      box-shadow: 0 10px 16px -18px rgba(61, 39, 22, 0.6);
+      padding: 0.6rem 0;
+      letter-spacing: 0.01em;
+      transition: color 180ms ease;
+      font-weight: 400;
+    }
+    .link-button:hover { color: var(--ink); }
+
+    .link-button.primary {
+      margin-left: auto;
+      color: var(--accent);
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .link-button.primary:hover { color: #7a5540; }
+
+    .link-button.primary::after {
+      content: "→";
+      font-style: normal;
+      transition: transform 200ms ease;
+    }
+    .link-button.primary:hover::after { transform: translateX(2px); }
+
+    .sep {
+      width: 1px; height: 0.9rem;
+      background: var(--rule-strong);
     }
 
-    .ghost-button {
-      background: rgba(255, 248, 239, 0.76);
-      border: 1px solid rgba(143, 76, 41, 0.15);
-      color: var(--accent-deep);
-      font-weight: 600;
-    }
-
-    .primary-button {
-      background: #ae6840;
-      color: #fffaf4;
-      font-weight: 600;
-      box-shadow: 0 18px 24px -18px rgba(104, 57, 29, 0.9);
-    }
+    /* ---------- Stage + card ---------- */
 
     .stage {
       flex: 1;
@@ -223,95 +232,88 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 2.5rem;
-      overflow: visible;
+      padding: 3rem;
       position: relative;
+      background: var(--bg);
     }
+    .stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: var(--paper-image-1);
+      background-size: cover;
+      background-position: center;
+      mix-blend-mode: multiply;
+      opacity: 0.18;
+      pointer-events: none;
+    }
+    .stage::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.5), transparent 60%);
+      pointer-events: none;
+    }
+    .stage > * { position: relative; z-index: 1; }
 
     .stack {
       position: relative;
-      width: min(468px, calc(100vw - 3rem));
+      width: min(460px, calc(100vw - 3rem));
       aspect-ratio: 3 / 4;
-      transition: height 280ms ease, width 280ms ease;
-      z-index: 1;
+      transform: rotate(0deg);
+      transform-origin: 50% 60%;
+      transition: aspect-ratio 320ms ease, transform 320ms ease;
     }
-
     .stack.expanded {
       aspect-ratio: auto;
       height: auto;
     }
 
-    .stack.expanded .stack-underlay {
-      display: none;
+    .card {
+      position: absolute;
+      inset: 0;
+      background: var(--paper);
+      border-radius: 2px;
+      box-shadow:
+        0 1px 1px rgba(78, 52, 30, 0.04),
+        0 3px 6px rgba(78, 52, 30, 0.04),
+        0 10px 20px -8px rgba(78, 52, 30, 0.08),
+        0 24px 44px -18px rgba(78, 52, 30, 0.12),
+        0 50px 80px -36px rgba(78, 52, 30, 0.10);
+      overflow: hidden;
+    }
+
+    /* Paper texture — real grain, kept whisper-quiet via low opacity + multiply */
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: var(--paper-image-1);
+      background-size: cover;
+      background-position: center;
+      mix-blend-mode: multiply;
+      opacity: 0.45;
+      pointer-events: none;
+    }
+
+    /* Soft vignette + warmth highlight layered above the texture */
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 0%, rgba(255, 252, 245, 0.55), transparent 55%),
+        radial-gradient(ellipse at 100% 100%, rgba(222, 210, 192, 0.18), transparent 55%);
+      pointer-events: none;
     }
 
     .stack.expanded .card {
       position: relative;
       inset: auto;
-      min-height: 0;
     }
 
-    .stack-underlay,
-    .card {
-      position: absolute;
-      inset: 0;
-      border: 1px solid rgba(144, 110, 83, 0.24);
-      border-radius: 0.65rem;
-      background: var(--paper);
-    }
-
-    .stack-underlay {
-      pointer-events: none;
-      box-shadow: 0 22px 40px -34px rgba(78, 52, 30, 0.35);
-    }
-
-    .stack-underlay.one {
-      transform: rotate(-2.6deg) translate(-10px, 9px);
-      background:
-        linear-gradient(180deg, rgba(249, 240, 227, 0.94), rgba(239, 223, 202, 0.92)),
-        var(--paper-image-2) center / cover no-repeat;
-      z-index: 1;
-    }
-
-    .stack-underlay.two {
-      transform: rotate(1.9deg) translate(8px, 5px);
-      background:
-        linear-gradient(180deg, rgba(246, 235, 220, 0.95), rgba(236, 218, 196, 0.93)),
-        var(--paper-image-1) center / cover no-repeat;
-      z-index: 2;
-    }
-
-    .card {
-      overflow: hidden;
-      z-index: 3;
-      box-shadow: var(--shadow);
-    }
-
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(180deg, rgba(255, 252, 246, 0.86), rgba(244, 232, 214, 0.84)),
-        var(--paper-image-1) center / cover no-repeat,
-        radial-gradient(circle at top right, rgba(202, 157, 117, 0.22), transparent 26%),
-        radial-gradient(circle at left 30%, rgba(255, 255, 255, 0.5), transparent 30%);
-      background-size: auto, cover, auto, auto;
-      mix-blend-mode: normal;
-      opacity: 0.98;
-      pointer-events: none;
-    }
-
-    .card::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.62),
-        inset 0 -30px 60px rgba(148, 109, 72, 0.08),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.3);
-      pointer-events: none;
+    #preview-body > :is(h1,h2,h3,h4,h5,h6,p,li,dt,dd,blockquote,figcaption,label,span,a,em,strong,small,td,th,caption) {
+      opacity: 0.8;
     }
 
     .card-inner {
@@ -320,8 +322,9 @@
       display: flex;
       flex-direction: column;
       height: 100%;
-      padding: 2rem 2rem 1.6rem;
-      gap: 1rem;
+      padding: 3.2rem 3rem 2.4rem;
+      gap: 1.25rem;
+      border-radius: 4px;
     }
 
     .stack.expanded .card-inner {
@@ -329,27 +332,27 @@
       min-height: 0;
     }
 
-    .header-mark {
+    /* Header: gentle italic marker + date, no uppercase */
+    .card-head {
       display: flex;
       align-items: baseline;
       justify-content: space-between;
       gap: 1rem;
-      margin-bottom: 0.1rem;
+      color: var(--ink-faint);
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 0.82rem;
+      font-weight: 400;
     }
-
-    .folio {
-      font-size: 0.72rem;
-      letter-spacing: 0.32em;
-      text-transform: uppercase;
-      color: var(--accent);
-      font-weight: 700;
+    .card-head .lhs { letter-spacing: 0.01em; }
+    .card-head .rhs {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
-
-    .ornament {
-      width: 2.8rem;
-      height: 1px;
-      background: linear-gradient(90deg, rgba(185, 111, 65, 0.95), rgba(185, 111, 65, 0.12));
-      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+    .card-head .tick {
+      width: 14px; height: 1px;
+      background: var(--rule-strong);
     }
 
     .preview {
@@ -357,26 +360,41 @@
       flex-direction: column;
       min-height: 0;
       flex: 1;
+      gap: 1.3rem;
     }
 
     .preview-title {
-      margin: 0 0 1.4rem;
-      color: #2f2118;
-      font-family: "Baskerville", "Didot", "Times New Roman", serif;
-      font-size: clamp(2rem, 3vw, 2.8rem);
-      line-height: 0.94;
-      letter-spacing: -0.06em;
-      font-weight: 700;
+      margin: 0;
+      color: var(--accent);
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 48px;
+      line-height: 1;
+      letter-spacing: -0.025em;
+    }
+
+    .preview-title-sub {
+      display: block;
+      margin-top: 0.35rem;
+      font-size: 0.78rem;
+      font-family: var(--sans);
+      font-weight: 400;
+      color: var(--ink-faint);
+      letter-spacing: 0.04em;
     }
 
     .preview-body {
       min-height: 0;
       flex: 1;
       overflow: hidden;
+      position: relative;
     }
+    .stack.expanded .preview-body { overflow: visible; }
 
-    .stack.expanded .preview-body {
-      overflow: visible;
+    /* Fade-out mask when collapsed and overflowing — removed, card texture made it show as a white band */
+    .preview-body.has-fade::after {
+      display: none;
     }
 
     .content {
@@ -384,233 +402,356 @@
       color: var(--ink);
       white-space: pre-wrap;
       word-break: break-word;
-      text-align: justify;
-      font-family: "Cormorant Garamond", "Iowan Old Style", "Palatino Linotype", serif;
-      font-size: 1.16rem;
-      line-height: 1.84;
-      letter-spacing: 0.008em;
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: 1.05rem;
+      line-height: 1.85;
+      letter-spacing: 0.005em;
     }
 
+    /* Removed the large dropped-cap + orange coloring; a single gentle lead-in instead */
     .content::first-line {
-      color: var(--accent-deep);
-      font-size: 1.26em;
-      font-style: italic;
-      font-weight: 600;
+      color: var(--ink);
     }
 
+    /* Notes = inner monologue, rendered as a margin-style note */
     .notes {
       margin-top: 1.6rem;
-      padding: 0.2rem 0 0 1.15rem;
-      border-left: 1px solid rgba(160, 123, 96, 0.24);
+      padding-top: 1.1rem;
+      border-top: 1px solid var(--rule);
       color: var(--ink-soft);
-      font-family: "Avenir Next", "PingFang SC", sans-serif;
-      font-size: 0.84rem;
-      line-height: 1.72;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 0.92rem;
+      line-height: 1.75;
       white-space: pre-wrap;
       word-break: break-word;
-    }
-
-    .quote-mark {
-      margin-bottom: 0.45rem;
-      color: var(--accent);
-      font-family: "Baskerville", serif;
-      font-size: 1.2rem;
-      opacity: 0.75;
-    }
-
-    .card-controls {
       display: flex;
-      justify-content: center;
-      min-height: 1.4rem;
+      gap: 0.9rem;
+      align-items: flex-start;
     }
+    .notes-marker {
+      flex: 0 0 auto;
+      color: var(--accent);
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 0.82rem;
+      letter-spacing: 0.02em;
+      padding-top: 0.1em;
+      white-space: nowrap;
+      opacity: 0.9;
+    }
+
+    /* Monologue teaser: a single-line preview of the inner monologue */
+    .monologue-teaser {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-height: 1.25rem;
+      color: var(--accent);
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+    .monologue-teaser .marker {
+      flex: 0 0 auto;
+      color: var(--accent);
+      opacity: 0.9;
+      font-family: var(--serif);
+      font-size: 1.4rem;
+      line-height: 0;
+      transform: translateY(0.12em);
+      white-space: nowrap;
+    }
+    .monologue-teaser .text {
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--accent);
+    }
+    .monologue-teaser.hidden { display: none; }
 
     .expand-button {
       display: inline-flex;
       align-items: center;
-      gap: 0.45rem;
-      background: transparent;
-      color: var(--accent-deep);
-      font-size: 0.72rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      padding: 0.3rem 0;
-      cursor: pointer;
-      opacity: 0.82;
-      transition: transform 160ms ease, opacity 160ms ease;
+      justify-content: center;
+      width: 1.6rem;
+      height: 1.6rem;
+      color: var(--ink-faint);
+      font-family: var(--serif);
+      transition: color 180ms ease;
+      padding: 0;
     }
+    .expand-button:hover { color: var(--accent); }
+    .expand-button.hidden { display: none; }
+    .toggle-icon { font-size: 0.95rem; line-height: 1; transition: transform 260ms ease; display: inline-block; }
+    .expand-button[aria-expanded="true"] .toggle-icon { transform: rotate(180deg); }
 
-    .expand-button:hover {
-      opacity: 1;
-    }
-
-    .toggle-icon {
-      font-size: 0.95rem;
-      line-height: 1;
-    }
-
-    .expand-button.hidden {
-      display: none;
-    }
-
-    .footer {
+    /* Footer: just a quiet signature line */
+    .card-foot {
+      margin-top: 0.5rem;
       padding-top: 1rem;
-      margin-top: auto;
-      border-top: 1px solid rgba(144, 110, 83, 0.14);
+      border-top: 1px solid var(--rule);
       display: flex;
-      align-items: flex-end;
+      align-items: center;
       justify-content: space-between;
       gap: 1rem;
-    }
-
-    .footer-label {
-      display: block;
-      color: var(--muted);
-      font-size: 0.52rem;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      font-weight: 700;
-    }
-
-    .footer-date {
-      display: block;
-      margin-top: 0.28rem;
-      color: var(--accent-deep);
-      font-family: "Baskerville", "Times New Roman", serif;
-      font-size: 0.82rem;
+      color: var(--ink-faint);
+      font-family: var(--serif);
       font-style: italic;
+      font-size: 0.8rem;
+      font-weight: 400;
+    }
+    .card-foot .foot-right {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .card-foot .signature {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .card-foot .signature .glyph {
+      font-style: normal;
+      color: var(--accent);
+      opacity: 0.8;
     }
 
-    .footer-id {
-      color: var(--muted);
-      font-family: "Avenir Next Condensed", "Arial Narrow", sans-serif;
-      font-size: 0.58rem;
-      letter-spacing: 0.34em;
-      text-transform: uppercase;
-      opacity: 0.86;
+    .hidden { display: none !important; }
+
+    /* Ink-on-paper text fusion — subtle shadow to mimic ink absorbed into paper grain */
+    .content { text-shadow: 0 0.5px 2px rgba(60, 48, 34, 0.07); }
+    .preview-title { text-shadow: 0 1px 5px rgba(201, 120, 74, 0.13); }
+    .notes { text-shadow: 0 0.5px 2px rgba(60, 48, 34, 0.06); }
+    .card-head, .card-foot { text-shadow: 0 0.5px 2px rgba(60, 48, 34, 0.05); }
+
+    /* Panel handle — hidden on desktop, shown on mobile */
+    .panel-handle { display: none; }
+    .panel-handle .handle-pill {
+      width: 36px; height: 4px;
+      background: var(--rule-strong);
+      border-radius: 2px;
     }
 
-    .hidden {
-      display: none;
-    }
+    /* On desktop, panel-body is transparent so the existing flex layout is unchanged */
+    .panel-body { display: contents; }
+
+    /* ---------- Responsive ---------- */
 
     @media (max-width: 980px) {
-      .app {
-        flex-direction: column;
-      }
-
+      .app { flex-direction: column; }
       .panel {
         width: 100%;
         flex-basis: auto;
         border-right: 0;
-        border-bottom: 1px solid rgba(132, 101, 76, 0.12);
-        box-shadow: none;
+        border-bottom: 1px solid var(--rule);
+        padding: 2rem 1.5rem;
       }
-
-      .stage {
-        padding: 1.5rem 1rem 2rem;
-        align-items: flex-start;
-      }
+      .stage { padding: 2rem 1rem 3rem; align-items: flex-start; }
     }
 
     @media (max-width: 640px) {
+      html, body { overflow: hidden; height: 100%; }
+
+      .app { height: 100vh; height: 100dvh; overflow: hidden; }
+
+      /* Stage becomes full-screen card wallpaper */
+      .stage {
+        position: fixed;
+        inset: 0;
+        padding: 1rem 0.75rem calc(136px + 1.5rem);
+        z-index: 0;
+        align-items: center;
+        justify-content: center;
+        transition: filter 400ms ease;
+      }
+
+      .stage.panel-open { filter: brightness(0.86); }
+
+      .stack {
+        width: 460px;
+        aspect-ratio: 3 / 4;
+        transform: scale(0.8);
+        transform-origin: center center;
+        transition: transform 400ms cubic-bezier(0.32, 0.72, 0, 1);
+      }
+
+      .stage.panel-open .stack { transform: scale(0.8) translateY(-8vh); }
+
+      .card-inner { padding: 2.2rem 1.75rem 1.6rem; }
+      .preview-title { font-size: 1.7rem; }
+
+      /* Panel becomes bottom sheet */
       .panel {
-        padding: 1.25rem;
-      }
-
-      .actions {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .icon-button {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 10;
         width: 100%;
+        flex: none;
+        height: 136px;
+        padding: 0;
+        border-right: 0;
+        border-bottom: 0;
+        border-top: none;
+        border-radius: 1.25rem 1.25rem 0 0;
+        background: rgba(251, 248, 242, 0.95);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: height 400ms cubic-bezier(0.32, 0.72, 0, 1);
+        box-shadow: 0 -1px 0 var(--rule), 0 -4px 24px rgba(60, 48, 34, 0.09);
       }
 
-      .stack,
-      .stack.expanded {
-        width: min(100%, 440px);
+      .panel.expanded { height: 70vh; height: 70dvh; }
+
+      /* Handle bar */
+      .panel-handle {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 136px;
+        gap: 0.45rem;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
       }
 
-      .card-inner {
-        padding: 1.45rem 1.3rem 1.2rem;
-      }
+      .panel-handle .wordmark { transition: opacity 300ms ease; }
+      .panel.expanded .panel-handle .wordmark { opacity: 0; pointer-events: none; }
 
-      .preview-title {
-        font-size: 2rem;
+      .handle-subtitle {
+        margin: 0.2rem 0 0;
+        font-size: 0.8rem;
+        color: var(--ink-faint);
+        line-height: 1.55;
+        text-align: center;
+        padding: 0 2rem;
+        transition: opacity 300ms ease;
       }
+      .panel.expanded .handle-subtitle { opacity: 0; pointer-events: none; }
+
+      /* Panel scrollable content */
+      .panel-body {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        scrollbar-width: none;
+        padding: 0.25rem 1.5rem 2.5rem;
+        gap: 1.75rem;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 280ms ease 60ms, transform 280ms ease 60ms;
+      }
+      .panel-body::-webkit-scrollbar { display: none; }
+
+      .panel.expanded .panel-body { opacity: 1; transform: translateY(0); }
+
+      /* Hide wordmark in panel-body since handle already shows it */
+      .panel-body .panel-header .wordmark { display: none; }
     }
   </style>
 </head>
 <body>
   <main class="app">
     <aside class="panel">
-      <div class="panel-header">
-        <span class="eyebrow">Warm Archive</span>
-        <h1 class="panel-title">笔记实验室</h1>
-        <p class="panel-subtitle">调整标题、正文和注释，右侧会生成一张更接近纸本藏页质感的卡片，并支持导出保存。</p>
+      <!-- Mobile handle bar -->
+      <div class="panel-handle" id="panel-handle">
+        <span class="handle-pill" aria-hidden="true"></span>
+        <div class="wordmark" aria-hidden="true">
+          <span class="dot" aria-hidden="true"></span>
+          <span>a quiet note</span>
+        </div>
+        <p class="handle-subtitle">写一段文字，再写下读它时心里浮起的声音。</p>
       </div>
 
-      <section class="fields">
-        <div class="field">
-          <label for="title-input">Title / 标题</label>
-          <input id="title-input" type="text" placeholder="Sonnet 18">
+      <!-- Content: display:contents on desktop, flex column on mobile -->
+      <div class="panel-body">
+        <div class="panel-header">
+          <div class="wordmark">
+            <span class="dot" aria-hidden="true"></span>
+            <span>a quiet note</span>
+          </div>
+          <p class="panel-subtitle">写一段文字，再写下读它时心里浮起的声音。右侧会生成一张安静的卡片。</p>
         </div>
 
-        <div class="field">
-          <label for="content-input">Main Content / 正文</label>
-          <textarea id="content-input" placeholder="我可否将你比作夏日？&#10;你却比夏日更可爱，也更温柔；&#10;五月娇蕾常遭狂风摧折，&#10;夏天的租期又未免太短太匆匆。"></textarea>
-        </div>
+        <section class="fields">
+          <div class="field">
+            <label for="title-input">标题 <em>title</em></label>
+            <input id="title-input" type="text" placeholder="Sonnet 18">
+          </div>
 
-        <div class="field">
-          <label for="notes-input">Notes / 注释</label>
-          <textarea id="notes-input" placeholder="可选注释或旁白"></textarea>
-        </div>
-      </section>
+          <div class="field">
+            <label for="content-input">正文 <em>the text</em></label>
+            <textarea id="content-input" placeholder="写下一首诗，一段话，或一句让你停下来的句子…"></textarea>
+          </div>
 
-      <div class="actions">
-        <button id="clear-btn" class="icon-button" type="button" aria-label="清空">⌫</button>
-        <button id="copy-btn" class="ghost-button" type="button">复制内容</button>
-        <button id="save-btn" class="primary-button" type="button">保存卡片</button>
+          <div class="field">
+            <label for="notes-input">心声 <em>inner monologue</em></label>
+            <textarea id="notes-input" placeholder="读它的时候，你听见自己在想什么？"></textarea>
+          </div>
+        </section>
+
+        <div class="actions">
+          <button id="clear-btn" class="link-button" type="button">清空</button>
+          <span class="sep" aria-hidden="true"></span>
+          <button id="copy-btn" class="link-button" type="button">复制</button>
+          <button id="save-btn" class="link-button primary" type="button">保存卡片</button>
+        </div>
       </div>
     </aside>
 
     <section class="stage">
       <div id="stack" class="stack">
-        <div class="stack-underlay one" aria-hidden="true"></div>
-        <div class="stack-underlay two" aria-hidden="true"></div>
-
         <article id="card" class="card">
           <div class="card-inner">
-            <div class="header-mark">
-              <span class="folio">folio 01</span>
-              <div class="ornament" aria-hidden="true"></div>
-            </div>
+            <header class="card-head">
+              <span class="lhs" id="head-left">a note, quietly kept</span>
+              <span class="rhs">
+                <span class="tick" aria-hidden="true"></span>
+                <span id="head-date"></span>
+              </span>
+            </header>
 
             <div class="preview">
-              <h2 id="preview-title" class="preview-title">Sonnet 18</h2>
+              <div>
+                <h2 id="preview-title" class="preview-title">Sonnet 18</h2>
+                <span id="preview-subtitle" class="preview-title-sub">William Shakespeare · 1609</span>
+              </div>
 
               <div id="preview-body" class="preview-body">
                 <p id="preview-content" class="content"></p>
 
                 <aside id="preview-notes" class="notes">
-                  <div class="quote-mark">❞</div>
+                  <span class="notes-marker">— 心声</span>
                   <div id="preview-notes-text"></div>
                 </aside>
               </div>
             </div>
 
-            <div class="card-controls">
-              <button id="toggle-btn" class="expand-button hidden" type="button" title="展开全文" aria-expanded="false">
-                <span id="toggle-icon" class="toggle-icon">⌄</span>
-                <span id="toggle-label">展开全文</span>
-              </button>
+            <div id="monologue-teaser" class="monologue-teaser hidden">
+              <span class="marker">“</span>
+              <span class="text" id="monologue-teaser-text"></span>
             </div>
 
-            <footer class="footer">
-              <div>
-                <span class="footer-label">Archived</span>
-                <span id="footer-date" class="footer-date"></span>
-              </div>
-              <div id="footer-id" class="footer-id"></div>
+            <footer class="card-foot">
+              <span class="signature"><span class="glyph">❧</span><span id="foot-date"></span></span>
+              <span class="foot-right">
+                <span id="foot-mood">kept softly</span>
+                <button id="toggle-btn" class="expand-button hidden" type="button" aria-expanded="false" aria-label="展开全文" title="展开全文">
+                  <span class="toggle-icon" aria-hidden="true">⌄</span>
+                </button>
+              </span>
             </footer>
           </div>
         </article>
@@ -622,6 +763,7 @@
     (function () {
       var defaults = {
         title: "Sonnet 18",
+        subtitle: "William Shakespeare · 1609",
         content: [
           "我可否将你比作夏日？",
           "你却比夏日更可爱，也更温柔；",
@@ -638,51 +780,53 @@
           "只要人能呼吸，眼能看见，",
           "这诗就将长存，并赐予你生命。"
         ].join("\n"),
-        notes: ""
+        notes: [
+          "读第一行时，心里其实是迟疑的——把一个人比作夏天，像不像太轻率了？",
+          "可读到 “你却比夏日更温柔”，忽然明白他不是在比喻，是在辩护。",
+          "最后那一句让我安静了很久：原来他想留下的，不是夏天，是你。"
+        ].join("\n")
       };
 
       var state = {
         expanded: false,
-        needsExpand: false,
-        archiveId: Math.floor(Math.random() * 9000 + 1000)
+        needsExpand: false
       };
 
-      var titleInput = document.getElementById("title-input");
-      var contentInput = document.getElementById("content-input");
-      var notesInput = document.getElementById("notes-input");
-      var clearBtn = document.getElementById("clear-btn");
-      var copyBtn = document.getElementById("copy-btn");
-      var saveBtn = document.getElementById("save-btn");
-      var toggleBtn = document.getElementById("toggle-btn");
-      var toggleIcon = document.getElementById("toggle-icon");
-      var toggleLabel = document.getElementById("toggle-label");
-      var stack = document.getElementById("stack");
-      var previewTitle = document.getElementById("preview-title");
-      var previewBody = document.getElementById("preview-body");
-      var previewContent = document.getElementById("preview-content");
-      var previewNotes = document.getElementById("preview-notes");
-      var previewNotesText = document.getElementById("preview-notes-text");
-      var footerDate = document.getElementById("footer-date");
-      var footerId = document.getElementById("footer-id");
+      var $ = function (id) { return document.getElementById(id); };
+
+      var titleInput   = $("title-input");
+      var contentInput = $("content-input");
+      var notesInput   = $("notes-input");
+
+      var clearBtn  = $("clear-btn");
+      var copyBtn   = $("copy-btn");
+      var saveBtn   = $("save-btn");
+      var toggleBtn = $("toggle-btn");
+      var monologueTeaser = $("monologue-teaser");
+      var monologueTeaserText = $("monologue-teaser-text");
+
+      var stack = $("stack");
+      var previewTitle    = $("preview-title");
+      var previewSubtitle = $("preview-subtitle");
+      var previewBody     = $("preview-body");
+      var previewContent  = $("preview-content");
+      var previewNotes    = $("preview-notes");
+      var previewNotesText= $("preview-notes-text");
+
+      var headDate = $("head-date");
+      var footDate = $("foot-date");
+
       var styleTag = document.querySelector("style");
       var paperImage1 = new URL("../../assets/paper1.jpg", window.location.href).href;
-      var paperImage2 = new URL("../../assets/paper2.jpg", window.location.href).href;
 
       document.documentElement.style.setProperty("--paper-image-1", 'url("' + paperImage1 + '")');
-      document.documentElement.style.setProperty("--paper-image-2", 'url("' + paperImage2 + '")');
 
-      function syncOverflowState() {
-        var hadExpanded = state.expanded;
-        if (hadExpanded) {
-          stack.classList.remove("expanded");
-        }
-
-        state.needsExpand = previewBody.scrollHeight > previewBody.clientHeight + 1;
-
-        if (hadExpanded) {
-          stack.classList.add("expanded");
-        }
-      }
+      // Dates — quiet, lowercase, no "ARCHIVED" screaming
+      var today = new Date();
+      var headFmt = today.toLocaleDateString("en-US", { month: "short", day: "numeric" }).toLowerCase();
+      var footFmt = today.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }).toLowerCase();
+      headDate.textContent = headFmt;
+      footDate.textContent = "kept on " + footFmt;
 
       function currentValues() {
         return {
@@ -692,25 +836,47 @@
         };
       }
 
+      function syncOverflowState() {
+        var wasExpanded = state.expanded;
+        if (wasExpanded) stack.classList.remove("expanded");
+
+        var overflow = previewBody.scrollHeight > previewBody.clientHeight + 1;
+        state.needsExpand = overflow;
+        previewBody.classList.toggle("has-fade", overflow);
+
+        if (wasExpanded) stack.classList.add("expanded");
+      }
+
       function render() {
-        var values = currentValues();
-        var title = values.title || defaults.title;
-        var content = values.content || defaults.content;
-        var notes = values.notes || "";
-        var showNotes = Boolean(notes || !values.content);
+        var v = currentValues();
+        var title = v.title || defaults.title;
+        var content = v.content || defaults.content;
+        var notes = v.notes || (v.content ? "" : defaults.notes);
 
         previewTitle.textContent = title;
+        previewSubtitle.style.display = (title === defaults.title) ? "block" : "none";
+
         previewContent.textContent = content;
-        previewNotesText.textContent = notes || defaults.notes;
-        previewNotes.classList.toggle("hidden", !showNotes);
+        previewNotesText.textContent = notes;
+        previewNotes.classList.toggle("hidden", !notes);
+
+        // Single-line monologue teaser above the footer
+        var hasNotes = !!notes;
+        monologueTeaser.classList.toggle("hidden", !hasNotes);
+        if (hasNotes) {
+          // Flatten to a single line — use the first meaningful sentence / line
+          var firstLine = notes.split(/\n+/).map(function (s) { return s.trim(); }).filter(Boolean)[0] || notes;
+          monologueTeaserText.textContent = firstLine;
+        }
 
         stack.classList.toggle("expanded", state.expanded);
         syncOverflowState();
-        toggleBtn.classList.toggle("hidden", !state.needsExpand && !state.expanded);
+
+        var showToggle = state.needsExpand || state.expanded;
+        toggleBtn.classList.toggle("hidden", !showToggle);
         toggleBtn.setAttribute("aria-expanded", String(state.expanded));
-        toggleBtn.title = state.expanded ? "收起全文" : "展开全文";
-        toggleIcon.textContent = state.expanded ? "⌃" : "⌄";
-        toggleLabel.textContent = state.expanded ? "收起全文" : "展开全文";
+        toggleBtn.setAttribute("aria-label", state.expanded ? "收起" : "展开全文");
+        toggleBtn.title = state.expanded ? "收起" : "展开全文";
       }
 
       async function copyText(text) {
@@ -718,30 +884,24 @@
           await navigator.clipboard.writeText(text);
           return true;
         }
-
-        var textArea = document.createElement("textarea");
-        textArea.value = text;
-        textArea.style.position = "fixed";
-        textArea.style.opacity = "0";
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        var copied = document.execCommand("copy");
-        document.body.removeChild(textArea);
-        return copied;
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.focus(); ta.select();
+        var ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+        return ok;
       }
 
-      function flashButton(button, message, timeout) {
-        var original = button.textContent;
-        button.textContent = message;
-        window.setTimeout(function () {
-          button.textContent = original;
-        }, timeout || 1800);
+      function flash(btn, msg, ms) {
+        var original = btn.textContent;
+        btn.textContent = msg;
+        setTimeout(function () { btn.textContent = original; }, ms || 1500);
       }
 
-      function handleInput() {
-        render();
-      }
+      function handleInput() { render(); }
 
       function handleClear() {
         titleInput.value = "";
@@ -752,32 +912,50 @@
       }
 
       async function handleCopy() {
-        var values = currentValues();
-        var combined = [values.title, values.content, values.notes].join("\n").trim();
-        var copyValue = combined || [defaults.title, defaults.content, defaults.notes].join("\n");
-
+        var v = currentValues();
+        var parts = [];
+        if (v.title || !v.content) parts.push(v.title || defaults.title);
+        parts.push(v.content || defaults.content);
+        if (v.notes) { parts.push(""); parts.push("— 心声"); parts.push(v.notes); }
         try {
-          await copyText(copyValue);
-          flashButton(copyBtn, "已复制");
-        } catch (error) {
-          flashButton(copyBtn, "复制失败");
+          await copyText(parts.join("\n"));
+          flash(copyBtn, "已复制");
+        } catch (e) {
+          flash(copyBtn, "复制失败");
         }
       }
 
       function handleToggle() {
-        if (!state.needsExpand && !state.expanded) {
-          return;
-        }
+        if (!state.needsExpand && !state.expanded) return;
         state.expanded = !state.expanded;
         render();
       }
 
-      function buildExportSvg() {
+      function blobToDataUrl(blob) {
+        return new Promise(function (resolve, reject) {
+          var reader = new FileReader();
+          reader.onloadend = function () { resolve(reader.result); };
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+      }
+
+      async function getExportPaperImage() {
+        var response = await fetch(paperImage1, { cache: "force-cache" });
+        if (!response.ok) {
+          throw new Error("Paper image request failed: " + response.status);
+        }
+
+        var blob = await response.blob();
+        return blobToDataUrl(blob);
+      }
+
+      async function buildExportSvg() {
         var clone = stack.cloneNode(true);
         var bounds = stack.getBoundingClientRect();
         var width = Math.ceil(bounds.width);
         var height = Math.ceil(bounds.height);
-        var padding = 40;
+        var padding = 48;
         var totalWidth = width + padding * 2;
         var totalHeight = height + padding * 2;
 
@@ -786,35 +964,25 @@
         clone.style.aspectRatio = "auto";
         clone.style.transform = "none";
 
-        var serializedCard = clone.outerHTML;
+        var serialized = clone.outerHTML;
         var rootStyles = getComputedStyle(document.documentElement);
+        var paperImageForExport = await getExportPaperImage();
         var varNames = [
-          "--bg",
-          "--panel",
-          "--paper",
-          "--paper-edge",
-          "--ink",
-          "--ink-soft",
-          "--accent",
-          "--accent-deep",
-          "--muted",
-          "--line",
-          "--shadow",
-          "--panel-width",
-          "--paper-image-1",
-          "--paper-image-2"
+          "--bg","--bg-soft","--paper","--ink","--ink-soft","--ink-faint",
+          "--rule","--rule-strong","--accent","--accent-soft",
+          "--serif","--sans"
         ];
-
-        var inlineVars = varNames.map(function (name) {
-          return name + ":" + rootStyles.getPropertyValue(name).trim() + ";";
+        var inlineVars = varNames.map(function (n) {
+          return n + ":" + rootStyles.getPropertyValue(n).trim() + ";";
         }).join("");
+        inlineVars += "--paper-image-1:url(" + paperImageForExport + ");";
 
         return [
           "<svg xmlns='http://www.w3.org/2000/svg' width='" + totalWidth + "' height='" + totalHeight + "' viewBox='0 0 " + totalWidth + " " + totalHeight + "'>",
           "<foreignObject x='0' y='0' width='100%' height='100%'>",
-          "<div xmlns='http://www.w3.org/1999/xhtml' style='width:" + totalWidth + "px;height:" + totalHeight + "px;padding:" + padding + "px;background:#f7efe3;" + inlineVars + "'>",
+          "<div xmlns='http://www.w3.org/1999/xhtml' style='width:" + totalWidth + "px;height:" + totalHeight + "px;padding:" + padding + "px;background:" + rootStyles.getPropertyValue("--bg").trim() + ";" + inlineVars + "'>",
           "<style>" + styleTag.textContent + "</style>",
-          serializedCard,
+          serialized,
           "</div>",
           "</foreignObject>",
           "</svg>"
@@ -823,92 +991,80 @@
 
       function triggerDownload(blob, fileName) {
         var url = URL.createObjectURL(blob);
-        var link = document.createElement("a");
-        link.href = url;
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.setTimeout(function () {
-          URL.revokeObjectURL(url);
-        }, 1000);
+        var a = document.createElement("a");
+        a.href = url; a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
       }
 
       function loadImage(src) {
         return new Promise(function (resolve, reject) {
-          var image = new Image();
-          image.onload = function () {
-            resolve(image);
-          };
-          image.onerror = reject;
-          image.src = src;
+          var img = new Image();
+          img.decoding = "sync";
+          img.onload = function () { resolve(img); };
+          img.onerror = reject;
+          img.src = src;
         });
       }
 
       function canvasToBlob(canvas) {
         return new Promise(function (resolve) {
-          canvas.toBlob(function (blob) {
-            resolve(blob);
-          }, "image/png");
+          canvas.toBlob(function (blob) { resolve(blob); }, "image/png");
         });
       }
 
       async function handleSave() {
-        var fileSlug = (currentValues().title || defaults.title)
-          .toLowerCase()
+        var v = currentValues();
+        var slugSource = v.title || defaults.title;
+        var slug = slugSource.toLowerCase()
           .replace(/[^a-z0-9\u4e00-\u9fa5]+/g, "-")
-          .replace(/^-+|-+$/g, "") || "note-card";
+          .replace(/^-+|-+$/g, "") || "note";
 
-        var originalText = saveBtn.textContent;
-        var finalText = originalText;
-        saveBtn.textContent = "保存中...";
+        var original = saveBtn.textContent;
+        saveBtn.textContent = "保存中…";
         saveBtn.disabled = true;
+        var finalText = original;
 
         try {
-          var svg = buildExportSvg();
+          if (document.fonts && document.fonts.ready) {
+            await document.fonts.ready;
+          }
+
+          var svg = await buildExportSvg();
           var bounds = stack.getBoundingClientRect();
-          var padding = 40;
-          var totalWidth = Math.ceil(bounds.width) + padding * 2;
-          var totalHeight = Math.ceil(bounds.height) + padding * 2;
-          var svgBlob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
-          var svgUrl = URL.createObjectURL(svgBlob);
-          var image = await loadImage(svgUrl);
+          var padding = 48;
+          var totalW = Math.ceil(bounds.width) + padding * 2;
+          var totalH = Math.ceil(bounds.height) + padding * 2;
+          var svgUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+
+          var img = await loadImage(svgUrl);
           var scale = 2;
           var canvas = document.createElement("canvas");
-          var context = canvas.getContext("2d");
+          var ctx = canvas.getContext("2d");
+          canvas.width = totalW * scale;
+          canvas.height = totalH * scale;
+          ctx.scale(scale, scale);
+          var bgColor = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim() || "#f6f2ec";
+          ctx.fillStyle = bgColor;
+          ctx.fillRect(0, 0, totalW, totalH);
+          ctx.drawImage(img, 0, 0, totalW, totalH);
 
-          canvas.width = totalWidth * scale;
-          canvas.height = totalHeight * scale;
-
-          context.scale(scale, scale);
-          context.fillStyle = "#f7efe3";
-          context.fillRect(0, 0, totalWidth, totalHeight);
-          context.drawImage(image, 0, 0, totalWidth, totalHeight);
-
-          URL.revokeObjectURL(svgUrl);
-
-          var pngBlob = await canvasToBlob(canvas);
-          if (pngBlob) {
-            triggerDownload(pngBlob, fileSlug + ".png");
-          } else {
-            triggerDownload(svgBlob, fileSlug + ".svg");
+          var png = await canvasToBlob(canvas);
+          if (!png) {
+            throw new Error("PNG export failed");
           }
 
-          finalText = "已保存";
-        } catch (error) {
-          try {
-            var fallbackBlob = new Blob([buildExportSvg()], { type: "image/svg+xml;charset=utf-8" });
-            triggerDownload(fallbackBlob, fileSlug + ".svg");
-            finalText = "已保存 SVG";
-          } catch (fallbackError) {
-            finalText = "保存失败";
-          }
+          triggerDownload(png, slug + ".png");
+          finalText = "已保存 PNG";
+        } catch (e) {
+          console.error("Save card failed", e);
+          finalText = "保存失败";
         } finally {
           saveBtn.disabled = false;
           saveBtn.textContent = finalText;
-          window.setTimeout(function () {
-            saveBtn.textContent = originalText;
-          }, 2200);
+          setTimeout(function () { saveBtn.textContent = original; }, 2000);
         }
       }
 
@@ -921,12 +1077,36 @@
       toggleBtn.addEventListener("click", handleToggle);
       window.addEventListener("resize", render);
 
-      footerDate.textContent = new Date().toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric"
+      // Mobile bottom sheet — expand / collapse
+      var panelEl = document.querySelector(".panel");
+      var stageEl = document.querySelector(".stage");
+      var panelHandleEl = document.getElementById("panel-handle");
+
+      function isMobileSheet() {
+        return window.matchMedia("(max-width: 640px)").matches;
+      }
+
+      function setPanelOpen(open) {
+        panelEl.classList.toggle("expanded", open);
+        stageEl.classList.toggle("panel-open", open);
+      }
+
+      panelHandleEl.addEventListener("click", function () {
+        if (!isMobileSheet()) return;
+        setPanelOpen(!panelEl.classList.contains("expanded"));
       });
-      footerId.textContent = "# " + state.archiveId;
+
+      [titleInput, contentInput, notesInput].forEach(function (inp) {
+        inp.addEventListener("focus", function () {
+          if (isMobileSheet()) setPanelOpen(true);
+        });
+      });
+
+      stageEl.addEventListener("click", function () {
+        if (isMobileSheet() && panelEl.classList.contains("expanded")) {
+          setPanelOpen(false);
+        }
+      });
 
       render();
     }());

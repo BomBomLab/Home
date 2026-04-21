@@ -10,6 +10,26 @@ This repository collects Clawd web apps, desktop apps, and future connected proj
 
 ## ✨ Apps
 
+### 📝 安静的笔记 / A Quiet Note
+
+在线体验：<https://bombomlab.github.io/Home/apps/claude-note/note.html>
+
+写一段文字，再写下读它时心里浮起的声音。右侧会实时生成一张有纸张质感的卡片，最后可以导出为 PNG。
+
+- 支持标题、正文、心声三个字段，实时预览
+- 移动端优化：卡片作为背景，输入面板从底部半模态展开
+- 一键导出卡片为高清 PNG
+
+Write a piece of text, then write down the inner voice that surfaces as you read it. A paper-textured card is generated in real time and can be exported as PNG.
+
+- Title, body text, and inner monologue fields with live preview
+- Mobile optimized: card as background layer, input panel slides up as a bottom sheet
+- One-tap PNG export
+
+Source folder: `apps/claude-note`
+
+---
+
 ### 🕒 克克时钟 / Clawd Clock
 
 在线体验：<https://bombomlab.github.io/Home/apps/clawd-clock/>
