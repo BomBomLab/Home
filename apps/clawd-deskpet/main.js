@@ -271,7 +271,7 @@ function refreshMousePassthrough(win) {
 
 function startCursorPolling(win) {
   stopCursorPolling();
-  cursorPollTimer = setInterval(() => refreshMousePassthrough(win), 80);
+  cursorPollTimer = setInterval(() => refreshMousePassthrough(win), 140);
 }
 
 function stopCursorPolling() {
