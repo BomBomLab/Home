@@ -1,6 +1,7 @@
 const { app, BrowserWindow, Tray, Menu, nativeImage, ipcMain, screen } = require('electron');
 const fs = require('fs');
 const path = require('path');
+const { uIOhook, UiohookKey } = require('uiohook-napi');
 
 let mainWindow = null;
 let tray = null;
@@ -8,6 +9,7 @@ let dragOffset = null;
 let cursorPollTimer = null;
 let forceInteractive = false;
 let lastIgnoreMouseEvents = null;
+let globalKeyListenerStarted = false;
 
 const WINDOW_WIDTH = 420;
 const WINDOW_HEIGHT = 420;
@@ -18,6 +20,174 @@ const INTERACTION_REGION = {
   height: 252,
   padding: 24
 };
+
+const SHIFTED_CHAR_MAP = {
+  '1': '!',
+  '2': '@',
+  '3': '#',
+  '4': '$',
+  '5': '%',
+  '6': '^',
+  '7': '&',
+  '8': '*',
+  '9': '(',
+  '0': ')',
+  '-': '_',
+  '=': '+',
+  '[': '{',
+  ']': '}',
+  '\\': '|',
+  ';': ':',
+  "'": '"',
+  ',': '<',
+  '.': '>',
+  '/': '?',
+  '`': '~'
+};
+
+const KEYCODE_CHAR_MAP = new Map([
+  [UiohookKey.A, 'a'],
+  [UiohookKey.B, 'b'],
+  [UiohookKey.C, 'c'],
+  [UiohookKey.D, 'd'],
+  [UiohookKey.E, 'e'],
+  [UiohookKey.F, 'f'],
+  [UiohookKey.G, 'g'],
+  [UiohookKey.H, 'h'],
+  [UiohookKey.I, 'i'],
+  [UiohookKey.J, 'j'],
+  [UiohookKey.K, 'k'],
+  [UiohookKey.L, 'l'],
+  [UiohookKey.M, 'm'],
+  [UiohookKey.N, 'n'],
+  [UiohookKey.O, 'o'],
+  [UiohookKey.P, 'p'],
+  [UiohookKey.Q, 'q'],
+  [UiohookKey.R, 'r'],
+  [UiohookKey.S, 's'],
+  [UiohookKey.T, 't'],
+  [UiohookKey.U, 'u'],
+  [UiohookKey.V, 'v'],
+  [UiohookKey.W, 'w'],
+  [UiohookKey.X, 'x'],
+  [UiohookKey.Y, 'y'],
+  [UiohookKey.Z, 'z'],
+  [UiohookKey[0], '0'],
+  [UiohookKey[1], '1'],
+  [UiohookKey[2], '2'],
+  [UiohookKey[3], '3'],
+  [UiohookKey[4], '4'],
+  [UiohookKey[5], '5'],
+  [UiohookKey[6], '6'],
+  [UiohookKey[7], '7'],
+  [UiohookKey[8], '8'],
+  [UiohookKey[9], '9'],
+  [UiohookKey.Numpad0, '0'],
+  [UiohookKey.Numpad1, '1'],
+  [UiohookKey.Numpad2, '2'],
+  [UiohookKey.Numpad3, '3'],
+  [UiohookKey.Numpad4, '4'],
+  [UiohookKey.Numpad5, '5'],
+  [UiohookKey.Numpad6, '6'],
+  [UiohookKey.Numpad7, '7'],
+  [UiohookKey.Numpad8, '8'],
+  [UiohookKey.Numpad9, '9'],
+  [UiohookKey.Space, ' '],
+  [UiohookKey.Minus, '-'],
+  [UiohookKey.Equal, '='],
+  [UiohookKey.BracketLeft, '['],
+  [UiohookKey.BracketRight, ']'],
+  [UiohookKey.Backslash, '\\'],
+  [UiohookKey.Semicolon, ';'],
+  [UiohookKey.Quote, "'"],
+  [UiohookKey.Comma, ','],
+  [UiohookKey.Period, '.'],
+  [UiohookKey.Slash, '/'],
+  [UiohookKey.Backquote, '`'],
+  [UiohookKey.NumpadDecimal, '.'],
+  [UiohookKey.NumpadAdd, '+'],
+  [UiohookKey.NumpadSubtract, '-'],
+  [UiohookKey.NumpadMultiply, '*'],
+  [UiohookKey.NumpadDivide, '/']
+]);
+
+const NUMPAD_KEYCODES = new Set([
+  UiohookKey.Numpad0,
+  UiohookKey.Numpad1,
+  UiohookKey.Numpad2,
+  UiohookKey.Numpad3,
+  UiohookKey.Numpad4,
+  UiohookKey.Numpad5,
+  UiohookKey.Numpad6,
+  UiohookKey.Numpad7,
+  UiohookKey.Numpad8,
+  UiohookKey.Numpad9,
+  UiohookKey.NumpadDecimal,
+  UiohookKey.NumpadAdd,
+  UiohookKey.NumpadSubtract,
+  UiohookKey.NumpadMultiply,
+  UiohookKey.NumpadDivide
+]);
+
+function normalizeKey(event) {
+  const baseKey = KEYCODE_CHAR_MAP.get(event.keycode);
+  if (!baseKey) {
+    return null;
+  }
+
+  if (/^[a-z]$/.test(baseKey)) {
+    return event.shiftKey ? baseKey.toUpperCase() : baseKey;
+  }
+
+  if (baseKey === ' ') {
+    return null;
+  }
+
+  if (NUMPAD_KEYCODES.has(event.keycode)) {
+    return baseKey;
+  }
+
+  return event.shiftKey && SHIFTED_CHAR_MAP[baseKey] ? SHIFTED_CHAR_MAP[baseKey] : baseKey;
+}
+
+function forwardGlobalKeydown(event) {
+  const key = normalizeKey(event);
+  if (!key || key.length !== 1 || !mainWindow || mainWindow.isDestroyed()) {
+    return;
+  }
+
+  mainWindow.webContents.send('pet:keydown', { key });
+}
+
+function startGlobalKeyListener() {
+  if (globalKeyListenerStarted) {
+    return;
+  }
+
+  try {
+    uIOhook.on('keydown', forwardGlobalKeydown);
+    uIOhook.start();
+    globalKeyListenerStarted = true;
+  } catch (error) {
+    console.error('Failed to start global key listener:', error);
+  }
+}
+
+function stopGlobalKeyListener() {
+  if (!globalKeyListenerStarted) {
+    return;
+  }
+
+  uIOhook.off('keydown', forwardGlobalKeydown);
+
+  try {
+    uIOhook.stop();
+  } catch (error) {
+    console.error('Failed to stop global key listener:', error);
+  } finally {
+    globalKeyListenerStarted = false;
+  }
+}
 
 function createTrayImage() {
   const trayIconPath = path.join(__dirname, 'claude.svg');
@@ -149,6 +319,7 @@ app.whenReady().then(() => {
 
   mainWindow = createWindow();
   createTray();
+  startGlobalKeyListener();
 
   app.on('activate', () => {
     if (!mainWindow) {
@@ -157,6 +328,11 @@ app.whenReady().then(() => {
       mainWindow.showInactive();
     }
   });
+});
+
+app.on('will-quit', () => {
+  stopCursorPolling();
+  stopGlobalKeyListener();
 });
 
 ipcMain.on('pet:set-ignore-mouse-events', (_event, ignore) => {

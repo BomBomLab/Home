@@ -70,7 +70,7 @@ body {
   max-width: 220px;
   transform: translateX(-50%) translateY(8px) scale(0.88);
   opacity: 0;
-  z-index: 3;
+  z-index: 12;
   pointer-events: none;
 }
 
@@ -177,11 +177,21 @@ body {
   position: relative;
   z-index: 1;
   display: block;
+  overflow: visible;
   animation: float 3.4s ease-in-out infinite;
+}
+
+#xiaoke.working {
+  animation: none;
 }
 
 #xiaoke-wrap.dragging #xiaoke {
   animation-play-state: paused;
+}
+
+#pose-idle,
+#pose-working {
+  transition: opacity 200ms ease;
 }
 
 #xiaoke.squash {
@@ -266,33 +276,138 @@ body {
   50% { transform: rotate(18deg); }
 }
 
+#working-body,
+#type-arm-l,
+#type-arm-r {
+  transform-box: fill-box;
+}
+
+#working-body {
+  transform-origin: 44% 72%;
+  transform: translateY(0) rotate(-3deg);
+}
+
+#type-arm-l {
+  transform-origin: 10% 16%;
+  transform: translate(-8px, -28px) rotate(-20deg);
+}
+
+#type-arm-r {
+  transform-origin: 8% 14%;
+  transform: translate(10px, 26px) rotate(18deg);
+}
+
+#xiaoke.working #working-body {
+  animation: working-body 0.68s ease-in-out infinite;
+}
+
+#xiaoke.working #type-arm-l {
+  animation: type-arm-l 0.22s linear infinite;
+}
+
+#xiaoke.working #type-arm-r {
+  animation: type-arm-r 0.22s linear infinite;
+}
+
+#xiaoke-wrap.dragging #type-arm-l,
+#xiaoke-wrap.dragging #type-arm-r {
+  animation-play-state: paused;
+}
+
+@keyframes working-body {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translate(2px, 4px) rotate(-5deg); }
+}
+
+@keyframes type-arm-l {
+  0%, 18%, 42% { transform: translate(8px, 28px) rotate(12deg); }
+  50%, 78%, 100% { transform: translate(-10px, -34px) rotate(-24deg); }
+}
+
+@keyframes type-arm-r {
+  0%, 18%, 42% { transform: translate(-8px, -36px) rotate(-14deg); }
+  50%, 78%, 100% { transform: translate(10px, 28px) rotate(18deg); }
+}
+
+.eye-inner,
+.eye-outer,
+.eye-blink-bottom {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.eye-inner { opacity: 1; }
+
 .eye-outer { opacity: 0; }
 
-@keyframes close-eye {
-  0% { transform: translateY(0px); }
-  30%, 70% { transform: translateY(20px); }
-  100% { transform: translateY(0px); }
+.eye-blink-bottom { opacity: 0; }
+
+@keyframes hide-eye-top {
+  0%, 16% { opacity: 1; transform: none; }
+  22%, 78% { opacity: 0; transform: none; }
+  100% { opacity: 1; transform: none; }
 }
 
 @keyframes show-outer {
-  0% { opacity: 0; }
-  30%, 70% { opacity: 1; }
+  0%, 16% { opacity: 0; }
+  22%, 78% { opacity: 1; }
   100% { opacity: 0; }
 }
 
-#xiaoke.blinking .eye-inner {
-  animation: close-eye 0.32s ease both;
+@keyframes working-eye-top {
+  0%, 100% { opacity: 1; transform: translateY(0) scaleY(1); }
+  45%, 55% { opacity: 1; transform: translateY(12px) scaleY(0.16); }
+}
+
+@keyframes working-eye-bottom {
+  0%, 100% { opacity: 1; transform: translateY(0) scaleY(1); }
+  45%, 55% { opacity: 1; transform: translateY(-12px) scaleY(0.16); }
+}
+
+#xiaoke.blinking .eye-inner-top {
+  animation: hide-eye-top 0.52s steps(1, end) both;
+}
+
+#xiaoke.blinking .eye-inner-bottom {
+  animation: hide-eye-top 0.52s steps(1, end) both;
 }
 
 #xiaoke.blinking .eye-outer {
-  animation: show-outer 0.32s ease both;
+  animation: show-outer 0.52s steps(1, end) both;
+}
+
+#xiaoke.blinking .eye-blink-bottom {
+  animation: show-outer 0.52s steps(1, end) both;
+}
+
+#xiaoke.working.blinking .eye-inner-top {
+  animation: working-eye-top 0.24s ease both;
+}
+
+#xiaoke.working.blinking .eye-inner-bottom {
+  animation: working-eye-bottom 0.24s ease both;
+}
+
+#xiaoke.working.blinking .eye-outer,
+#xiaoke.working.blinking .eye-blink-bottom {
+  animation: none;
+  opacity: 0;
 }
 
 .note {
   position: fixed;
   pointer-events: none;
   line-height: 1;
+  z-index: 4;
   animation: drift linear forwards;
+}
+
+.note.key-note {
+  color: #FFFFFF;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  animation-name: drift-key;
 }
 
 @keyframes drift {
@@ -300,6 +415,13 @@ body {
   12% { opacity: 0.8; }
   80% { opacity: 0.5; }
   100% { opacity: 0; transform: translateY(-200px) rotate(18deg) scale(1.1); }
+}
+
+@keyframes drift-key {
+  0% { opacity: 0; transform: translate3d(0, 6px, 0) scale(0.82); }
+  14% { opacity: 0.96; }
+  82% { opacity: 0.68; }
+  100% { opacity: 0; transform: translate3d(var(--note-drift-x, 0px), var(--note-rise-y, -148px), 0) scale(1.02); }
 }
 </style>
 </head>
@@ -317,46 +439,98 @@ body {
     <div id="pet-shell">
       <div id="glow"></div>
       <svg id="xiaoke" viewBox="0 0 700 538" width="210" height="161" aria-label="小克">
-        <rect x="88" y="40" width="40" height="101" fill="#3498D9"></rect>
-        <rect x="128" y="20" width="40" height="40" fill="#3498D9"></rect>
-        <rect x="167" y="0" width="361" height="40" fill="#3498D9"></rect>
-        <rect x="528" y="20" width="40" height="40" fill="#3498D9"></rect>
-        <rect x="568" y="40" width="40" height="101" fill="#3498D9"></rect>
-        <rect x="59" y="141" width="50" height="159" fill="#3498D9"></rect>
-        <rect x="19" y="170" width="40" height="101" fill="#3498D9"></rect>
-        <rect x="591" y="141" width="50" height="159" fill="#3498D9"></rect>
-        <rect x="638" y="170" width="40" height="101" fill="#3498D9"></rect>
-        <rect x="109" y="141" width="482" height="317" fill="#E37E52"></rect>
-        <g id="arm-left">
-          <rect x="0" y="300" width="109" height="81" fill="#E37E52"></rect>
+        <g id="pose-idle">
+          <rect x="88" y="40" width="40" height="101" fill="#3498D9"></rect>
+          <rect x="128" y="20" width="40" height="40" fill="#3498D9"></rect>
+          <rect x="167" y="0" width="361" height="40" fill="#3498D9"></rect>
+          <rect x="528" y="20" width="40" height="40" fill="#3498D9"></rect>
+          <rect x="568" y="40" width="40" height="101" fill="#3498D9"></rect>
+          <rect x="59" y="141" width="50" height="159" fill="#3498D9"></rect>
+          <rect x="19" y="170" width="40" height="101" fill="#3498D9"></rect>
+          <rect x="591" y="141" width="50" height="159" fill="#3498D9"></rect>
+          <rect x="638" y="170" width="40" height="101" fill="#3498D9"></rect>
+          <rect x="109" y="141" width="482" height="317" fill="#E37E52"></rect>
+          <g id="arm-left">
+            <rect x="0" y="300" width="109" height="81" fill="#E37E52"></rect>
+          </g>
+          <g id="arm-right">
+            <rect x="591" y="259" width="109" height="81" fill="#E37E52"></rect>
+          </g>
+          <g id="leg-1" class="leg">
+            <rect x="148" y="458" width="40" height="40" fill="#E37E52"></rect>
+            <rect x="138" y="498" width="40" height="40" fill="#E37E52"></rect>
+          </g>
+          <g id="leg-2" class="leg">
+            <rect x="227" y="458" width="40" height="40" fill="#E37E52"></rect>
+            <rect x="217" y="498" width="40" height="40" fill="#E37E52"></rect>
+          </g>
+          <g id="leg-3" class="leg">
+            <rect x="429" y="458" width="40" height="40" fill="#E37E52"></rect>
+            <rect x="419" y="498" width="40" height="40" fill="#E37E52"></rect>
+          </g>
+          <g id="leg-4" class="leg">
+            <rect x="508" y="458" width="40" height="40" fill="#E37E52"></rect>
+            <rect x="498" y="498" width="40" height="40" fill="#E37E52"></rect>
+          </g>
+          <rect class="eye-inner eye-inner-top" x="178" y="188" width="40" height="40" fill="#111111"></rect>
+          <rect class="eye-inner eye-inner-bottom" x="178" y="227" width="40" height="40" fill="#111111"></rect>
+          <rect class="eye-blink-bottom" x="158" y="227" width="40" height="40" fill="#111111"></rect>
+          <rect class="eye-blink-bottom" x="198" y="227" width="40" height="40" fill="#111111"></rect>
+          <rect class="eye-outer" x="118" y="196" width="40" height="40" fill="#111111"></rect>
+          <rect class="eye-outer" x="237" y="196" width="40" height="40" fill="#111111"></rect>
+          <rect class="eye-inner eye-inner-top" x="479" y="188" width="40" height="40" fill="#111111"></rect>
+          <rect class="eye-inner eye-inner-bottom" x="479" y="227" width="40" height="40" fill="#111111"></rect>
+          <rect class="eye-blink-bottom" x="459" y="227" width="40" height="40" fill="#111111"></rect>
+          <rect class="eye-blink-bottom" x="499" y="227" width="40" height="40" fill="#111111"></rect>
+          <rect class="eye-outer" x="419" y="196" width="40" height="40" fill="#111111"></rect>
+          <rect class="eye-outer" x="538" y="196" width="40" height="40" fill="#111111"></rect>
         </g>
-        <g id="arm-right">
-          <rect x="591" y="259" width="109" height="81" fill="#E37E52"></rect>
+        <g id="pose-working" style="display:none; opacity:0">
+          <g id="working-scene" transform="translate(-18 120) scale(1.03)">
+            <g id="working-back-items">
+              <rect x="-4" y="159.666" width="49" height="158" transform="rotate(-9 -4 159.666)" fill="#3498D9"></rect>
+              <path d="M33 298.999H273V346.999H33V298.999Z" fill="#3498D9"></path>
+              <g id="working-body">
+                <rect x="56" y="0" width="456" height="303" fill="#E37E52"></rect>
+                <rect x="56" y="0" width="154" height="317" fill="#FFFFFF" fill-opacity="0.1"></rect>
+                <rect x="446" y="303" width="40" height="40" fill="#E37E52"></rect>
+                <rect x="372" y="303" width="40" height="40" fill="#E37E52"></rect>
+                <rect x="241" y="303" width="40" height="40" fill="#E37E52"></rect>
+                <rect x="149" y="303" width="40" height="40" fill="#E37E52"></rect>
+                <rect x="436" y="343" width="40" height="40" fill="#E37E52"></rect>
+                <rect x="362" y="343" width="40" height="40" fill="#E37E52"></rect>
+                <rect x="231" y="343" width="40" height="40" fill="#E37E52"></rect>
+                <rect x="135" y="343" width="40" height="40" fill="#E37E52"></rect>
+                <rect class="eye-inner eye-inner-top" x="456" y="84" width="48" height="34" fill="#111111"></rect>
+                <rect class="eye-inner eye-inner-bottom" x="456" y="117" width="48" height="34" fill="#111111"></rect>
+                <rect class="eye-blink-bottom" x="440" y="117" width="24" height="34" fill="#111111"></rect>
+                <rect class="eye-blink-bottom" x="496" y="117" width="24" height="34" fill="#111111"></rect>
+                <rect class="eye-outer" x="435" y="99" width="24" height="52" fill="#111111"></rect>
+                <rect class="eye-outer" x="501" y="99" width="24" height="52" fill="#111111"></rect>
+                <rect class="eye-inner eye-inner-top" x="267" y="84" width="48" height="34" fill="#111111"></rect>
+                <rect class="eye-inner eye-inner-bottom" x="267" y="117" width="48" height="34" fill="#111111"></rect>
+                <rect class="eye-blink-bottom" x="251" y="117" width="24" height="34" fill="#111111"></rect>
+                <rect class="eye-blink-bottom" x="307" y="117" width="24" height="34" fill="#111111"></rect>
+                <rect class="eye-outer" x="246" y="99" width="24" height="52" fill="#111111"></rect>
+                <rect class="eye-outer" x="312" y="99" width="24" height="52" fill="#111111"></rect>
+              </g>
+            </g>
+            <g id="working-computer">
+              <rect x="542" y="257" width="135" height="17" fill="#111111"></rect>
+              <rect x="714.644" y="65" width="30.2396" height="213" transform="rotate(8 714.644 65)" fill="#616161"></rect>
+              <rect x="506" y="267" width="188" height="27" fill="#616161"></rect>
+              <rect id="working-keyboard-origin" x="544" y="255" width="126" height="26" fill="#000000" opacity="0"></rect>
+            </g>
+            <g id="working-arms">
+              <g id="type-arm-l">
+                <rect x="482.371" y="83.2983" width="82" height="81" transform="rotate(-7 482.371 83.2983)" fill="#E37E52"></rect>
+              </g>
+              <g id="type-arm-r">
+                <rect x="491.515" y="173" width="96.3302" height="80" transform="rotate(9 491.515 173)" fill="#E07E53"></rect>
+              </g>
+            </g>
+          </g>
         </g>
-        <g id="leg-1" class="leg">
-          <rect x="148" y="458" width="40" height="40" fill="#E37E52"></rect>
-          <rect x="138" y="498" width="40" height="40" fill="#E37E52"></rect>
-        </g>
-        <g id="leg-2" class="leg">
-          <rect x="227" y="458" width="40" height="40" fill="#E37E52"></rect>
-          <rect x="217" y="498" width="40" height="40" fill="#E37E52"></rect>
-        </g>
-        <g id="leg-3" class="leg">
-          <rect x="429" y="458" width="40" height="40" fill="#E37E52"></rect>
-          <rect x="419" y="498" width="40" height="40" fill="#E37E52"></rect>
-        </g>
-        <g id="leg-4" class="leg">
-          <rect x="508" y="458" width="40" height="40" fill="#E37E52"></rect>
-          <rect x="498" y="498" width="40" height="40" fill="#E37E52"></rect>
-        </g>
-        <rect class="eye-inner" x="158" y="196" width="40" height="40" fill="#111111"></rect>
-        <rect class="eye-inner" x="197" y="196" width="40" height="40" fill="#111111"></rect>
-        <rect class="eye-outer" x="118" y="196" width="40" height="40" fill="#111111"></rect>
-        <rect class="eye-outer" x="237" y="196" width="40" height="40" fill="#111111"></rect>
-        <rect class="eye-inner" x="459" y="196" width="40" height="40" fill="#111111"></rect>
-        <rect class="eye-inner" x="498" y="196" width="40" height="40" fill="#111111"></rect>
-        <rect class="eye-outer" x="419" y="196" width="40" height="40" fill="#111111"></rect>
-        <rect class="eye-outer" x="538" y="196" width="40" height="40" fill="#111111"></rect>
       </svg>
     </div>
   </div>
@@ -366,6 +540,9 @@ body {
 const stage = document.getElementById('stage');
 const wrap = document.getElementById('xiaoke-wrap');
 const svg = document.getElementById('xiaoke');
+const poseIdle = document.getElementById('pose-idle');
+const poseWorking = document.getElementById('pose-working');
+const workingKeyboardOrigin = document.getElementById('working-keyboard-origin');
 const bubble = document.getElementById('bubble');
 const bubbleOs = document.getElementById('bubble-os');
 
@@ -389,6 +566,8 @@ const osPool = [
 
 const pool = ['🎵', '🎶', '🎧', '🎤', '🎸', '🎹', '♪', '♫', '💛', '🩷', '💙', '💚', '🧡', '❤️'];
 const panicPool = ['❓', '‼️', '🆘', '😱', '⁉️', '😵', '⚠️', '❗', '🤯', '💀', '😰'];
+const WORKING_TIMEOUT_MS = 30000;
+const POSE_FADE_MS = 200;
 
 let baseX = 0;
 let baseY = 0;
@@ -397,17 +576,23 @@ let walkPhase = Math.random() * Math.PI * 2;
 let walkSpeed = 0.0028 + Math.random() * 0.0012;
 let walkAmplitude = 18 + Math.random() * 12;
 let dragging = false;
+let petState = 'idle';
 let tapDownX = 0;
 let tapDownY = 0;
 let tapDownTime = 0;
 let bubbleFlip = false;
 let osIndex = -1;
 let bubbleTimeoutId = null;
+let ambientNoteTimeoutId = null;
 let squashTimeoutId = null;
+let workingTimeoutId = null;
+let poseHideTimeoutId = null;
+let removeKeyListener = () => {};
+let lastWorkingInputAt = 0;
 
 function blink() {
   svg.classList.add('blinking');
-  setTimeout(() => svg.classList.remove('blinking'), 320);
+  setTimeout(() => svg.classList.remove('blinking'), 520);
   setTimeout(blink, 2000 + Math.random() * 3000);
 }
 
@@ -462,6 +647,9 @@ function rotateOs() {
 }
 
 function showBubble() {
+  if (petState !== 'idle' || dragging) {
+    return;
+  }
   rotateOs();
   bubble.classList.remove('show');
   void bubble.offsetWidth;
@@ -470,10 +658,103 @@ function showBubble() {
 
 function queueBubble(delay) {
   clearTimeout(bubbleTimeoutId);
+  if (petState !== 'idle') {
+    return;
+  }
   bubbleTimeoutId = setTimeout(() => {
     showBubble();
     queueBubble(20000);
   }, delay);
+}
+
+function setPoseVisibility(showWorking) {
+  clearTimeout(poseHideTimeoutId);
+  poseIdle.style.display = '';
+  poseWorking.style.display = '';
+
+  requestAnimationFrame(() => {
+    poseIdle.style.opacity = showWorking ? '0' : '1';
+    poseWorking.style.opacity = showWorking ? '1' : '0';
+  });
+
+  poseHideTimeoutId = setTimeout(() => {
+    poseIdle.style.display = showWorking ? 'none' : '';
+    poseWorking.style.display = showWorking ? '' : 'none';
+  }, POSE_FADE_MS);
+}
+
+function getAmbientDelay() {
+  if (dragging) {
+    return 280 + Math.random() * 420;
+  }
+
+  if (petState === 'idle') {
+    return 1100 + Math.random() * 1200;
+  }
+
+  return null;
+}
+
+function queueAmbientNotes(delay = getAmbientDelay()) {
+  clearTimeout(ambientNoteTimeoutId);
+  if (delay == null) {
+    return;
+  }
+
+  ambientNoteTimeoutId = setTimeout(() => {
+    if (dragging) {
+      spawnNote(panicPool[Math.floor(Math.random() * panicPool.length)], { duration: 1.2 + Math.random() * 0.9 });
+    } else if (petState === 'idle') {
+      spawnNote(pool[Math.floor(Math.random() * pool.length)], { duration: 2.6 + Math.random() * 1.8 });
+    }
+    queueAmbientNotes();
+  }, delay);
+}
+
+function applyPetState(nextState) {
+  if (petState === nextState) {
+    return;
+  }
+
+  petState = nextState;
+  const isWorking = petState === 'working';
+  wrap.classList.toggle('working', isWorking);
+  svg.classList.toggle('working', isWorking);
+  setPoseVisibility(isWorking);
+  queueAmbientNotes();
+}
+
+function resetWorkingTimer() {
+  lastWorkingInputAt = Date.now();
+  clearTimeout(workingTimeoutId);
+  workingTimeoutId = setTimeout(() => {
+    exitWorking();
+  }, WORKING_TIMEOUT_MS);
+}
+
+function enterWorking() {
+  clearTimeout(bubbleTimeoutId);
+  bubble.classList.remove('show');
+  svg.classList.remove('blinking');
+  autoOffsetX = 0;
+  render();
+
+  if (petState !== 'working') {
+    applyPetState('working');
+  }
+
+  resetWorkingTimer();
+}
+
+function exitWorking() {
+  clearTimeout(workingTimeoutId);
+  lastWorkingInputAt = 0;
+
+  if (petState !== 'idle') {
+    applyPetState('idle');
+  }
+
+  queueBubble(25000);
 }
 
 function triggerSquash() {
@@ -495,6 +776,7 @@ function startDrag(event) {
   wrap.classList.add('dragging');
   wrap.classList.remove('hovering');
   window.petWindow.startWindowDrag(event.screenX, event.screenY);
+  queueAmbientNotes(120);
 }
 
 function stopDrag() {
@@ -507,6 +789,7 @@ function stopDrag() {
   triggerSquash();
   setTimeout(() => wrap.classList.remove('dropping'), 220);
   window.petWindow.stopWindowDrag();
+  queueAmbientNotes();
 }
 
 function handlePointerDown(event) {
@@ -540,33 +823,74 @@ function handlePointerUp(event) {
 }
 
 function animateWalk() {
-  if (!dragging) {
+  if (petState === 'working' && lastWorkingInputAt && Date.now() - lastWorkingInputAt >= WORKING_TIMEOUT_MS) {
+    exitWorking();
+  }
+
+  if (!dragging && petState !== 'working') {
     walkPhase += walkSpeed;
     autoOffsetX = Math.sin(walkPhase) * walkAmplitude + Math.sin(walkPhase * 0.33) * 6;
+    render();
+  } else if (!dragging && autoOffsetX !== 0) {
+    autoOffsetX = 0;
     render();
   }
   requestAnimationFrame(animateWalk);
 }
 
-function spawnNote() {
-  const activePool = dragging ? panicPool : pool;
+function spawnNote(content, options = {}) {
+  if (!content) {
+    return;
+  }
+
+  const isKeyNote = options.kind === 'key';
   const el = document.createElement('span');
-  el.className = 'note';
-  el.textContent = activePool[Math.floor(Math.random() * activePool.length)];
+  el.className = isKeyNote ? 'note key-note' : 'note';
+  el.textContent = content;
 
-  const rect = wrap.getBoundingClientRect();
-  const cx = rect.left + rect.width / 2;
-  const cy = rect.top + rect.height * 0.25;
-  el.style.left = `${cx + (Math.random() - 0.5) * rect.width * 0.8}px`;
-  el.style.top = `${cy + (Math.random() - 0.5) * rect.height * 0.35}px`;
+  const wrapRect = wrap.getBoundingClientRect();
+  const keyboardRect = isKeyNote && petState === 'working' && workingKeyboardOrigin
+    ? workingKeyboardOrigin.getBoundingClientRect()
+    : null;
+  const useKeyboardOrigin = Boolean(keyboardRect && keyboardRect.width > 0 && keyboardRect.height > 0);
+  const sourceRect = useKeyboardOrigin ? keyboardRect : wrapRect;
+  const cx = useKeyboardOrigin ? sourceRect.left + sourceRect.width * 0.52 : sourceRect.left + sourceRect.width / 2;
+  const cy = useKeyboardOrigin ? sourceRect.top - 22 : sourceRect.top + sourceRect.height * (isKeyNote ? 0.18 : 0.25);
+  const spreadX = useKeyboardOrigin ? sourceRect.width * 0.32 : sourceRect.width * (isKeyNote ? 0.28 : 0.8);
+  const spreadY = useKeyboardOrigin ? 6 : sourceRect.height * (isKeyNote ? 0.12 : 0.35);
+  const dur = options.duration ?? (isKeyNote ? (1.0 + Math.random() * 0.25) : (dragging ? (1.2 + Math.random() * 0.9) : (2.6 + Math.random() * 1.8)));
 
-  const dur = dragging ? (1.2 + Math.random() * 0.9) : (2.6 + Math.random() * 1.8);
+  el.style.left = `${cx + (Math.random() - 0.5) * spreadX}px`;
+  el.style.top = `${cy + (Math.random() - 0.5) * spreadY}px`;
   el.style.animationDuration = `${dur}s`;
-  el.style.fontSize = `${22 + Math.random() * 20}px`;
+  el.style.fontSize = `${isKeyNote ? (22 + Math.random() * 5) : (22 + Math.random() * 20)}px`;
+
+  if (isKeyNote) {
+    el.style.setProperty('--note-drift-x', `${(Math.random() - 0.5) * 10}px`);
+    el.style.setProperty('--note-rise-y', `${-128 - Math.random() * 24}px`);
+  }
 
   document.body.appendChild(el);
   setTimeout(() => el.remove(), (dur + 0.1) * 1000);
-  setTimeout(spawnNote, dragging ? (280 + Math.random() * 420) : (1100 + Math.random() * 1200));
+}
+
+function handleGlobalKeyDown(payload) {
+  const key = typeof payload?.key === 'string' ? payload.key : '';
+  const isVisibleChar = key.length === 1
+    && !payload?.metaKey
+    && !payload?.ctrlKey
+    && !payload?.altKey
+    && /\S/.test(key);
+
+  if (!isVisibleChar) {
+    return;
+  }
+
+  enterWorking();
+
+  if (Math.random() < 0.42) {
+    spawnNote(key.toUpperCase(), { kind: 'key' });
+  }
 }
 
 wrap.addEventListener('pointerenter', () => {
@@ -585,8 +909,20 @@ window.addEventListener('pointerup', handlePointerUp);
 window.addEventListener('pointercancel', handlePointerUp);
 window.addEventListener('blur', () => stopDrag());
 window.addEventListener('resize', placeInitial);
+window.addEventListener('beforeunload', () => {
+  clearTimeout(bubbleTimeoutId);
+  clearTimeout(ambientNoteTimeoutId);
+  clearTimeout(squashTimeoutId);
+  clearTimeout(workingTimeoutId);
+  clearTimeout(poseHideTimeoutId);
+  removeKeyListener();
+});
 svg.addEventListener('dragstart', (event) => event.preventDefault());
 
+removeKeyListener = window.petWindow.onKeyDown(handleGlobalKeyDown);
+poseIdle.style.opacity = '1';
+poseWorking.style.opacity = '0';
+poseWorking.style.display = 'none';
 setTimeout(blink, 800 + Math.random() * 1200);
 placeInitial();
 animateWalk();
@@ -594,7 +930,7 @@ sizeBubbleToText();
 showBubble();
 setTimeout(showBubble, 7000);
 queueBubble(25000);
-spawnNote();
+queueAmbientNotes();
 </script>
 </body>
 </html>
