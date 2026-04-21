@@ -1,4 +1,4 @@
-<img width="1382" height="769" alt="image" src="https://github.com/user-attachments/assets/133a6e0a-a109-40f4-bf7b-ac5baf3712b1" />![BomBomLab Banner](assets/banner.png)
+![BomBomLab Banner](assets/banner.png)
 
 🍠 小红书：魔法BomBom —— 小克周边，持续更新  
 This repository collects Clawd web apps, desktop apps, and future connected projects.
@@ -16,7 +16,7 @@ Source folder: `apps/claude-note`
 ---
 
 ### 🕒 克克时钟 / Clawd Clock
-<img width="2141" height="944" alt="banner2" src="https://github.com/user-attachments/assets/04a81fcf-b4a1-4b29-ba77-091e5a692b8d" />
+<img width="2091" height="513" alt="banner2" src="https://github.com/user-attachments/assets/1f8f0c32-b7f2-4015-9515-c6d5baee9533" />
 
 在线体验：<https://bombomlab.github.io/Home/apps/clawd-clock/xiaoke.html>
 
