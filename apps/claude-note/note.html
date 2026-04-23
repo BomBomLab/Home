@@ -332,10 +332,10 @@
       min-height: 0;
     }
 
-    /* Header: gentle italic marker + date, no uppercase */
+    /* Header: gentle left marker with a quiet logo on the right */
     .card-head {
       display: flex;
-      align-items: baseline;
+      align-items: flex-start;
       justify-content: space-between;
       gap: 1rem;
       color: var(--ink-faint);
@@ -348,11 +348,15 @@
     .card-head .rhs {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
+      justify-content: center;
+      flex: 0 0 auto;
     }
-    .card-head .tick {
-      width: 14px; height: 1px;
-      background: var(--rule-strong);
+    .card-head .head-logo {
+      display: block;
+      width: 30px;
+      height: 30px;
+      opacity: 0.2;
+      object-fit: contain;
     }
 
     .preview {
@@ -515,12 +519,6 @@
       align-items: center;
       gap: 0.45rem;
     }
-    .card-foot .signature .glyph {
-      font-style: normal;
-      color: var(--accent);
-      opacity: 0.8;
-    }
-
     .hidden { display: none !important; }
 
     /* Ink-on-paper text fusion — subtle shadow to mimic ink absorbed into paper grain */
@@ -717,9 +715,8 @@
           <div class="card-inner">
             <header class="card-head">
               <span class="lhs" id="head-left">a note, quietly kept</span>
-              <span class="rhs">
-                <span class="tick" aria-hidden="true"></span>
-                <span id="head-date"></span>
+              <span class="rhs" aria-hidden="true">
+                <img class="head-logo" src="../../assets/Claude_logo.svg" alt="">
               </span>
             </header>
 
@@ -745,7 +742,7 @@
             </div>
 
             <footer class="card-foot">
-              <span class="signature"><span class="glyph">❧</span><span id="foot-date"></span></span>
+              <span class="signature"><span id="foot-date"></span></span>
               <span class="foot-right">
                 <span id="foot-mood">kept softly</span>
                 <button id="toggle-btn" class="expand-button hidden" type="button" aria-expanded="false" aria-label="展开全文" title="展开全文">
@@ -813,19 +810,17 @@
       var previewNotes    = $("preview-notes");
       var previewNotesText= $("preview-notes-text");
 
-      var headDate = $("head-date");
       var footDate = $("foot-date");
 
-      var styleTag = document.querySelector("style");
       var paperImage1 = new URL("../../assets/paper1.jpg", window.location.href).href;
+      var logoImage = new URL("../../assets/Claude_logo.svg", window.location.href).href;
+      var assetCache = Object.create(null);
 
       document.documentElement.style.setProperty("--paper-image-1", 'url("' + paperImage1 + '")');
 
       // Dates — quiet, lowercase, no "ARCHIVED" screaming
       var today = new Date();
-      var headFmt = today.toLocaleDateString("en-US", { month: "short", day: "numeric" }).toLowerCase();
       var footFmt = today.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }).toLowerCase();
-      headDate.textContent = headFmt;
       footDate.textContent = "kept on " + footFmt;
 
       function currentValues() {
@@ -940,14 +935,80 @@
         });
       }
 
-      async function getExportPaperImage() {
-        var response = await fetch(paperImage1, { cache: "force-cache" });
+      async function assetUrlToDataUrl(url) {
+        if (assetCache[url]) return assetCache[url];
+
+        var response = await fetch(url, { cache: "force-cache" });
         if (!response.ok) {
-          throw new Error("Paper image request failed: " + response.status);
+          throw new Error("Asset request failed: " + response.status);
         }
 
         var blob = await response.blob();
-        return blobToDataUrl(blob);
+        var dataUrl = await blobToDataUrl(blob);
+        assetCache[url] = dataUrl;
+        return dataUrl;
+      }
+
+      function copyComputedStyles(sourceEl, targetEl) {
+        var computed = getComputedStyle(sourceEl);
+
+        for (var i = 0; i < computed.length; i += 1) {
+          var prop = computed[i];
+          targetEl.style.setProperty(prop, computed.getPropertyValue(prop), computed.getPropertyPriority(prop));
+        }
+      }
+
+      function inlineTreeStyles(sourceRoot, targetRoot) {
+        copyComputedStyles(sourceRoot, targetRoot);
+
+        var sourceChildren = sourceRoot.children;
+        var targetChildren = targetRoot.children;
+        for (var i = 0; i < sourceChildren.length; i += 1) {
+          inlineTreeStyles(sourceChildren[i], targetChildren[i]);
+        }
+      }
+
+      function replaceCloneImageSources(root, sourceMap) {
+        root.querySelectorAll("img").forEach(function (img) {
+          var rawSrc = img.getAttribute("src");
+          if (!rawSrc) return;
+
+          var resolvedSrc = new URL(rawSrc, window.location.href).href;
+          if (sourceMap[resolvedSrc]) {
+            img.setAttribute("src", sourceMap[resolvedSrc]);
+          }
+        });
+      }
+
+      function injectExportCardLayers(cloneRoot, paperDataUrl) {
+        var cloneCard = cloneRoot.querySelector(".card");
+        if (!cloneCard) return;
+
+        var paperLayer = document.createElement("span");
+        paperLayer.setAttribute("aria-hidden", "true");
+        paperLayer.style.position = "absolute";
+        paperLayer.style.inset = "0";
+        paperLayer.style.backgroundImage = 'url("' + paperDataUrl + '")';
+        paperLayer.style.backgroundSize = "cover";
+        paperLayer.style.backgroundPosition = "center";
+        paperLayer.style.mixBlendMode = "multiply";
+        paperLayer.style.opacity = "0.45";
+        paperLayer.style.pointerEvents = "none";
+        paperLayer.style.zIndex = "0";
+
+        var glowLayer = document.createElement("span");
+        glowLayer.setAttribute("aria-hidden", "true");
+        glowLayer.style.position = "absolute";
+        glowLayer.style.inset = "0";
+        glowLayer.style.background = [
+          "radial-gradient(ellipse at 20% 0%, rgba(255, 252, 245, 0.55), transparent 55%)",
+          "radial-gradient(ellipse at 100% 100%, rgba(222, 210, 192, 0.18), transparent 55%)"
+        ].join(",");
+        glowLayer.style.pointerEvents = "none";
+        glowLayer.style.zIndex = "0";
+
+        cloneCard.insertBefore(glowLayer, cloneCard.firstChild);
+        cloneCard.insertBefore(paperLayer, glowLayer);
       }
 
       async function buildExportSvg() {
@@ -958,30 +1019,32 @@
         var padding = 48;
         var totalWidth = width + padding * 2;
         var totalHeight = height + padding * 2;
+        var paperImageForExport = await assetUrlToDataUrl(paperImage1);
+        var logoImageForExport = await assetUrlToDataUrl(logoImage);
+        var sourceMap = {};
+        var rootStyles = getComputedStyle(document.documentElement);
+        var fontStylesheet = document.querySelector('link[href*="fonts.googleapis.com"]');
 
         clone.style.width = width + "px";
         clone.style.height = height + "px";
+        clone.style.minHeight = height + "px";
         clone.style.aspectRatio = "auto";
         clone.style.transform = "none";
+        clone.style.position = "relative";
+
+        inlineTreeStyles(stack, clone);
+        sourceMap[logoImage] = logoImageForExport;
+        replaceCloneImageSources(clone, sourceMap);
+        injectExportCardLayers(clone, paperImageForExport);
 
         var serialized = clone.outerHTML;
-        var rootStyles = getComputedStyle(document.documentElement);
-        var paperImageForExport = await getExportPaperImage();
-        var varNames = [
-          "--bg","--bg-soft","--paper","--ink","--ink-soft","--ink-faint",
-          "--rule","--rule-strong","--accent","--accent-soft",
-          "--serif","--sans"
-        ];
-        var inlineVars = varNames.map(function (n) {
-          return n + ":" + rootStyles.getPropertyValue(n).trim() + ";";
-        }).join("");
-        inlineVars += "--paper-image-1:url(" + paperImageForExport + ");";
+        var fontImport = fontStylesheet ? "@import url('" + fontStylesheet.href + "');" : "";
 
         return [
           "<svg xmlns='http://www.w3.org/2000/svg' width='" + totalWidth + "' height='" + totalHeight + "' viewBox='0 0 " + totalWidth + " " + totalHeight + "'>",
           "<foreignObject x='0' y='0' width='100%' height='100%'>",
-          "<div xmlns='http://www.w3.org/1999/xhtml' style='width:" + totalWidth + "px;height:" + totalHeight + "px;padding:" + padding + "px;background:" + rootStyles.getPropertyValue("--bg").trim() + ";" + inlineVars + "'>",
-          "<style>" + styleTag.textContent + "</style>",
+          "<div xmlns='http://www.w3.org/1999/xhtml' style='width:" + totalWidth + "px;height:" + totalHeight + "px;padding:" + padding + "px;background:" + rootStyles.getPropertyValue("--bg").trim() + ";box-sizing:border-box;'>",
+          "<style>*{box-sizing:border-box;}" + fontImport + "</style>",
           serialized,
           "</div>",
           "</foreignObject>",
