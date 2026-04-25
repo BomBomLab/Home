@@ -1540,6 +1540,7 @@ var JournalRuntime = (() => {
     }
   };
   var { useState, useMemo, useEffect } = React;
+  var MOBILE_BREAKPOINT = 860;
   var THEMES = {
     "Warm Paper": {
       "--paper": "oklch(0.970 0.012 75)",
@@ -1594,6 +1595,7 @@ var JournalRuntime = (() => {
   };
   var Chevron = ({ dir = "left", size = 16 }) => /* @__PURE__ */ React.createElement("svg", { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.6", strokeLinecap: "round", strokeLinejoin: "round" }, dir === "left" ? /* @__PURE__ */ React.createElement("polyline", { points: "15 18 9 12 15 6" }) : /* @__PURE__ */ React.createElement("polyline", { points: "9 18 15 12 9 6" }));
   var DOW_LABELS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+  var getIsMobileViewport = () => typeof window !== "undefined" ? window.innerWidth <= MOBILE_BREAKPOINT : false;
   var summarizeDay = (events) => {
     if (!events || !events.length) return "";
     const candidates = events.filter((e) => e.categoryId !== "rest").filter((e) => !(e.subcategoryId || "").startsWith("life.hygiene")).slice().sort((a, b) => b.endHour - b.startHour - (a.endHour - a.startHour));
@@ -1861,26 +1863,28 @@ var JournalRuntime = (() => {
       textOverflow: "ellipsis"
     } }, event.title);
   };
-  var Header = ({ view, setView, label, onPrev, onNext }) => /* @__PURE__ */ React.createElement("header", { style: {
+  var Header = ({ view, setView, label, onPrev, onNext, isMobile }) => /* @__PURE__ */ React.createElement("header", { style: {
     display: "grid",
-    gridTemplateColumns: "1fr auto 1fr",
+    gridTemplateColumns: isMobile ? "1fr" : "1fr auto 1fr",
     alignItems: "center",
-    marginBottom: 28,
-    padding: "0 6px"
-  } }, /* @__PURE__ */ React.createElement("div", null), /* @__PURE__ */ React.createElement("div", { className: "pill-group", role: "tablist" }, ["daily", "weekly", "monthly"].map((v) => /* @__PURE__ */ React.createElement("button", { key: v, className: "pill", "data-on": view === v, onClick: () => setView(v) }, v[0].toUpperCase() + v.slice(1)))), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 10, justifySelf: "end" } }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "icon-btn", onClick: onPrev, "aria-label": "Previous" }, /* @__PURE__ */ React.createElement(Chevron, { dir: "left" })), /* @__PURE__ */ React.createElement("span", { style: {
+    justifyItems: isMobile ? "center" : "stretch",
+    marginBottom: isMobile ? 22 : 28,
+    padding: isMobile ? "0" : "0 6px",
+    rowGap: isMobile ? 12 : 0
+  } }, /* @__PURE__ */ React.createElement("div", { style: { display: isMobile ? "none" : "block" } }), /* @__PURE__ */ React.createElement("div", { className: "pill-group", role: "tablist" }, ["daily", "weekly", "monthly"].map((v) => /* @__PURE__ */ React.createElement("button", { key: v, className: "pill", "data-on": view === v, onClick: () => setView(v) }, v[0].toUpperCase() + v.slice(1)))), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 10, justifySelf: isMobile ? "center" : "end" } }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "icon-btn", onClick: onPrev, "aria-label": "Previous" }, /* @__PURE__ */ React.createElement(Chevron, { dir: "left" })), /* @__PURE__ */ React.createElement("span", { style: {
     fontSize: 11,
     letterSpacing: "0.18em",
     textTransform: "uppercase",
     color: "var(--ink-2)",
-    minWidth: 120,
+    minWidth: isMobile ? 0 : 120,
     textAlign: "center",
     fontWeight: 500
   } }, label), /* @__PURE__ */ React.createElement("button", { type: "button", className: "icon-btn", onClick: onNext, "aria-label": "Next" }, /* @__PURE__ */ React.createElement(Chevron, { dir: "right" }))));
-  var WeeklyLeft = ({ checks, toggleCheck, priorities, weekDays }) => /* @__PURE__ */ React.createElement("div", { className: "paper-surface spine-shadow-r", style: {
-    borderRadius: "14px 0 0 14px",
-    padding: "44px 46px 40px",
-    width: "50%",
-    minHeight: 820,
+  var WeeklyLeft = ({ checks, toggleCheck, priorities, weekDays, isMobile }) => /* @__PURE__ */ React.createElement("div", { className: "paper-surface spine-shadow-r", style: {
+    borderRadius: isMobile ? 14 : "14px 0 0 14px",
+    padding: isMobile ? "28px 22px 24px" : "44px 46px 40px",
+    width: isMobile ? "100%" : "50%",
+    minHeight: isMobile ? "auto" : 820,
     display: "flex",
     flexDirection: "column",
     position: "relative"
@@ -1959,11 +1963,11 @@ var JournalRuntime = (() => {
     letterSpacing: "0.2em",
     textTransform: "uppercase"
   } }, /* @__PURE__ */ React.createElement("span", null, "Mon \u2014 Sun"), /* @__PURE__ */ React.createElement("span", null, "I")));
-  var WeeklyRight = ({ checks, toggleCheck, setTodoText, todoTexts, weekStartKey, weekNumber, weekNotes, weekReflection }) => /* @__PURE__ */ React.createElement("div", { className: "paper-surface spine-shadow-l", style: {
-    borderRadius: "0 14px 14px 0",
-    padding: "44px 46px 40px",
-    width: "50%",
-    minHeight: 820,
+  var WeeklyRight = ({ checks, toggleCheck, setTodoText, todoTexts, weekStartKey, weekNumber, weekNotes, weekReflection, isMobile }) => /* @__PURE__ */ React.createElement("div", { className: "paper-surface spine-shadow-l", style: {
+    borderRadius: isMobile ? 14 : "0 14px 14px 0",
+    padding: isMobile ? "28px 22px 24px" : "44px 46px 40px",
+    width: isMobile ? "100%" : "50%",
+    minHeight: isMobile ? "auto" : 820,
     display: "flex",
     flexDirection: "column",
     position: "relative"
@@ -2000,7 +2004,7 @@ var JournalRuntime = (() => {
     fontStyle: "italic"
   } }, weekNotes.map((note) => /* @__PURE__ */ React.createElement("p", { key: note.dateKey, style: { margin: "0 0 14px" } }, /* @__PURE__ */ React.createElement("span", { className: "accent-chip" }, formatDisplayDate(note.dateKey, { month: "short", day: "numeric" }).toLowerCase()), /* @__PURE__ */ React.createElement("span", { style: { marginLeft: 8 } }, note.text))), /* @__PURE__ */ React.createElement("p", { style: { margin: 0, color: "var(--ink-2)", fontStyle: "italic" } }, weekReflection))), /* @__PURE__ */ React.createElement("section", null, /* @__PURE__ */ React.createElement(Eyebrow, null, "To Do"), /* @__PURE__ */ React.createElement("div", { style: {
     display: "grid",
-    gridTemplateColumns: "1fr 1px 1fr",
+    gridTemplateColumns: isMobile ? "1fr" : "1fr 1px 1fr",
     gap: 18,
     marginTop: 14
   } }, /* @__PURE__ */ React.createElement("ul", { style: { listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 8 } }, todoTexts.slice(0, 3).map((t, i) => /* @__PURE__ */ React.createElement("li", { key: i, style: {
@@ -2060,190 +2064,194 @@ var JournalRuntime = (() => {
     return COMPRESS_END * compressedHourPx + (h - COMPRESS_END) * HOUR_PX;
   };
   var EVENT_CATEGORIES = DATA && DATA.CATEGORY_PALETTE || {};
-  var Daily = ({ checks, toggleCheck, dateKey, events, mustDo }) => /* @__PURE__ */ React.createElement("div", { className: "paper-surface page-shadow fadein", style: {
-    borderRadius: 14,
-    padding: "48px 56px",
-    maxWidth: 1240,
-    margin: "0 auto",
-    minHeight: 820,
-    display: "grid",
-    gridTemplateColumns: "1.6fr 1fr",
-    gridTemplateRows: "auto 1fr",
-    columnGap: 44,
-    rowGap: 24
-  } }, /* @__PURE__ */ React.createElement("div", { style: { gridColumn: "1 / -1" } }, /* @__PURE__ */ React.createElement("div", { className: "eyebrow", style: { marginBottom: 8 } }, formatDisplayDate(dateKey, { weekday: "long" }), " \xB7 ", dateKey.slice(8, 10), " \xB7 ", dateKey.slice(5, 7), " \xB7 ", dateKey.slice(0, 4)), /* @__PURE__ */ React.createElement("h2", { className: "font-serif", style: {
-    margin: 0,
-    fontSize: 64,
-    fontWeight: 500,
-    letterSpacing: "-0.01em",
-    lineHeight: 1.05
-  } }, /* @__PURE__ */ React.createElement("span", { style: { color: "var(--ink)", fontStyle: "normal" } }, parseDateKey(dateKey).getUTCDate(), /* @__PURE__ */ React.createElement("sup", { style: { fontSize: "0.45em", verticalAlign: "super", marginLeft: 2, marginRight: 4 } }, getOrdinal(parseDateKey(dateKey).getUTCDate()))), /* @__PURE__ */ React.createElement("span", { style: { fontStyle: "italic", color: "var(--ink)" } }, " ", getMonthLabel(dateKey)), /* @__PURE__ */ React.createElement("span", { style: { color: "rgba(132, 53, 13, 0.35)", fontStyle: "italic" } }, " \xB7 Journal"))), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 24 } }, /* @__PURE__ */ React.createElement("section", null, /* @__PURE__ */ React.createElement("div", { className: "cal-column", style: {
-    position: "relative",
-    border: "none",
-    borderRadius: 0,
-    background: "transparent",
-    overflow: "hidden"
-  } }, (() => {
-    const rows = [
-      // Compressed sleep band: two rows of 4 hours each, but rendered at compressed height (4 × ¼ = 1 × HOUR_PX)
-      { h: 0, label: "12 am", height: 4 * compressedHourPx },
-      { h: 4, label: "4 am", height: 4 * compressedHourPx }
-    ];
-    for (let h = COMPRESS_END; h <= SCHEDULE_END_HOUR; h++) {
-      const label = h === 0 ? "12 am" : h === 12 ? "noon" : h < 12 ? `${h} am` : `${h - 12} pm`;
-      rows.push({ h, label, height: HOUR_PX });
-    }
-    return rows.map((row, i) => {
-      const isLast = i === rows.length - 1;
-      return /* @__PURE__ */ React.createElement("div", { key: row.h, style: {
-        display: "grid",
-        gridTemplateColumns: "104px 1fr",
-        height: row.height,
-        borderBottom: isLast ? "none" : "1px solid var(--rule-soft)"
-      } }, /* @__PURE__ */ React.createElement("div", { style: {
-        fontSize: 10,
-        letterSpacing: "0.1em",
-        textTransform: "uppercase",
-        color: "var(--ink-4)",
-        fontVariantNumeric: "tabular-nums",
-        padding: "4px 10px 0 12px",
-        background: "transparent"
-      } }, row.label), /* @__PURE__ */ React.createElement("div", null));
-    });
-  })(), /* @__PURE__ */ React.createElement("div", { style: {
-    position: "absolute",
-    left: 104,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    pointerEvents: "none"
-  } }, events.map((e, i) => {
-    const cat = EVENT_CATEGORIES[e.categoryId] || { fill: "#eee", ink: "#333", label: e.categoryId };
-    const rawTop = hourTop(e.startHour) - hourTop(SCHEDULE_START_HOUR);
-    const rawBottom = hourTop(e.endHour) - hourTop(SCHEDULE_START_HOUR);
-    const top = Math.round(rawTop);
-    const height = Math.max(12, Math.round(rawBottom - rawTop) - EVENT_BLOCK_GAP_PX);
-    const duration = e.endHour - e.startHour;
-    const hh = DATA ? DATA.hourLabel : ((v) => {
-      const h = Math.floor(v);
-      const m = Math.round((v - h) * 60);
-      const suffix = h >= 12 ? "pm" : "am";
-      const h12 = (h + 11) % 12 + 1;
-      return m === 0 ? `${h12} ${suffix}` : `${h12}:${String(m).padStart(2, "0")} ${suffix}`;
-    });
-    return /* @__PURE__ */ React.createElement("div", { key: i, style: {
-      position: "absolute",
-      left: 6,
-      right: 6,
-      top,
-      height,
-      background: cat.fill,
-      color: cat.ink,
-      borderRadius: 6,
-      padding: duration < 0.8 ? "2px 10px" : "6px 10px",
-      fontSize: 12,
-      lineHeight: 1.3,
-      boxShadow: "none",
-      display: "flex",
-      flexDirection: duration < 0.8 ? "row" : "column",
-      justifyContent: duration < 0.8 ? "space-between" : "flex-start",
-      alignItems: duration < 0.8 ? "center" : "flex-start",
-      gap: 4,
-      overflow: "hidden",
-      pointerEvents: "auto"
-    } }, /* @__PURE__ */ React.createElement("span", { style: {
+  var Daily = ({ checks, toggleCheck, dateKey, events, mustDo, isMobile }) => {
+    const scheduleLabelWidth = isMobile ? 70 : 104;
+    const scheduleHeaderFont = isMobile ? 44 : 64;
+    return /* @__PURE__ */ React.createElement("div", { className: "paper-surface page-shadow fadein", style: {
+      borderRadius: 14,
+      padding: isMobile ? "26px 18px 22px" : "48px 56px",
+      maxWidth: 1240,
+      margin: "0 auto",
+      minHeight: isMobile ? "auto" : 820,
+      display: "grid",
+      gridTemplateColumns: isMobile ? "1fr" : "1.6fr 1fr",
+      gridTemplateRows: isMobile ? "auto auto auto" : "auto 1fr",
+      columnGap: isMobile ? 0 : 44,
+      rowGap: isMobile ? 18 : 24
+    } }, /* @__PURE__ */ React.createElement("div", { style: { gridColumn: "1 / -1" } }, /* @__PURE__ */ React.createElement("div", { className: "eyebrow", style: { marginBottom: 8 } }, formatDisplayDate(dateKey, { weekday: "long" }), " \xB7 ", dateKey.slice(8, 10), " \xB7 ", dateKey.slice(5, 7), " \xB7 ", dateKey.slice(0, 4)), /* @__PURE__ */ React.createElement("h2", { className: "font-serif", style: {
+      margin: 0,
+      fontSize: scheduleHeaderFont,
       fontWeight: 500,
-      whiteSpace: "nowrap",
-      overflow: "hidden",
-      textOverflow: "ellipsis",
-      maxWidth: "100%"
-    } }, e.title), /* @__PURE__ */ React.createElement("span", { style: {
+      letterSpacing: "-0.01em",
+      lineHeight: 1.05
+    } }, /* @__PURE__ */ React.createElement("span", { style: { color: "var(--ink)", fontStyle: "normal" } }, parseDateKey(dateKey).getUTCDate(), /* @__PURE__ */ React.createElement("sup", { style: { fontSize: "0.45em", verticalAlign: "super", marginLeft: 2, marginRight: 4 } }, getOrdinal(parseDateKey(dateKey).getUTCDate()))), /* @__PURE__ */ React.createElement("span", { style: { fontStyle: "italic", color: "var(--ink)" } }, " ", getMonthLabel(dateKey)), /* @__PURE__ */ React.createElement("span", { style: { color: "rgba(132, 53, 13, 0.35)", fontStyle: "italic" } }, " \xB7 Journal"))), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 24 } }, /* @__PURE__ */ React.createElement("section", null, /* @__PURE__ */ React.createElement("div", { className: "cal-column", style: {
+      position: "relative",
+      border: "none",
+      borderRadius: 0,
+      background: "transparent",
+      overflow: "hidden"
+    } }, (() => {
+      const rows = [
+        // Compressed sleep band: two rows of 4 hours each, but rendered at compressed height (4 × ¼ = 1 × HOUR_PX)
+        { h: 0, label: "12 am", height: 4 * compressedHourPx },
+        { h: 4, label: "4 am", height: 4 * compressedHourPx }
+      ];
+      for (let h = COMPRESS_END; h <= SCHEDULE_END_HOUR; h++) {
+        const label = h === 0 ? "12 am" : h === 12 ? "noon" : h < 12 ? `${h} am` : `${h - 12} pm`;
+        rows.push({ h, label, height: HOUR_PX });
+      }
+      return rows.map((row, i) => {
+        const isLast = i === rows.length - 1;
+        return /* @__PURE__ */ React.createElement("div", { key: row.h, style: {
+          display: "grid",
+          gridTemplateColumns: `${scheduleLabelWidth}px 1fr`,
+          height: row.height,
+          borderBottom: isLast ? "none" : "1px solid var(--rule-soft)"
+        } }, /* @__PURE__ */ React.createElement("div", { style: {
+          fontSize: 10,
+          letterSpacing: "0.1em",
+          textTransform: "uppercase",
+          color: "var(--ink-4)",
+          fontVariantNumeric: "tabular-nums",
+          padding: "4px 10px 0 12px",
+          background: "transparent"
+        } }, row.label), /* @__PURE__ */ React.createElement("div", null));
+      });
+    })(), /* @__PURE__ */ React.createElement("div", { style: {
+      position: "absolute",
+      left: scheduleLabelWidth,
+      right: 0,
+      top: 0,
+      bottom: 0,
+      pointerEvents: "none"
+    } }, events.map((e, i) => {
+      const cat = EVENT_CATEGORIES[e.categoryId] || { fill: "#eee", ink: "#333", label: e.categoryId };
+      const rawTop = hourTop(e.startHour) - hourTop(SCHEDULE_START_HOUR);
+      const rawBottom = hourTop(e.endHour) - hourTop(SCHEDULE_START_HOUR);
+      const top = Math.round(rawTop);
+      const height = Math.max(12, Math.round(rawBottom - rawTop) - EVENT_BLOCK_GAP_PX);
+      const duration = e.endHour - e.startHour;
+      const hh = DATA ? DATA.hourLabel : ((v) => {
+        const h = Math.floor(v);
+        const m = Math.round((v - h) * 60);
+        const suffix = h >= 12 ? "pm" : "am";
+        const h12 = (h + 11) % 12 + 1;
+        return m === 0 ? `${h12} ${suffix}` : `${h12}:${String(m).padStart(2, "0")} ${suffix}`;
+      });
+      return /* @__PURE__ */ React.createElement("div", { key: i, style: {
+        position: "absolute",
+        left: 6,
+        right: 6,
+        top,
+        height,
+        background: cat.fill,
+        color: cat.ink,
+        borderRadius: 6,
+        padding: duration < 0.8 ? "2px 10px" : "6px 10px",
+        fontSize: 12,
+        lineHeight: 1.3,
+        boxShadow: "none",
+        display: "flex",
+        flexDirection: duration < 0.8 ? "row" : "column",
+        justifyContent: duration < 0.8 ? "space-between" : "flex-start",
+        alignItems: duration < 0.8 ? "center" : "flex-start",
+        gap: 4,
+        overflow: "hidden",
+        pointerEvents: "auto"
+      } }, /* @__PURE__ */ React.createElement("span", { style: {
+        fontWeight: 500,
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        maxWidth: "100%"
+      } }, e.title), /* @__PURE__ */ React.createElement("span", { style: {
+        fontSize: 10,
+        opacity: 0.75,
+        letterSpacing: "0.02em",
+        whiteSpace: "nowrap"
+      } }, hh(e.startHour), " \u2013 ", hh(e.endHour)));
+    }))))), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 18 } }, /* @__PURE__ */ React.createElement("section", { style: {
+      background: "var(--paper-2)",
+      border: "1px solid var(--rule-soft)",
+      borderRadius: 10,
+      padding: isMobile ? "16px 16px" : "20px 22px"
+    } }, /* @__PURE__ */ React.createElement(Eyebrow, { rule: false }, "Must Do"), /* @__PURE__ */ React.createElement("ul", { style: {
+      listStyle: "none",
+      margin: "14px 0 0",
+      padding: 0,
+      display: "flex",
+      flexDirection: "column",
+      gap: 12
+    } }, mustDo.map((t, i) => /* @__PURE__ */ React.createElement("li", { key: i, style: { display: "flex", alignItems: "flex-start", gap: 10 } }, /* @__PURE__ */ React.createElement("span", { style: { paddingTop: 4 } }, /* @__PURE__ */ React.createElement(Tick, { on: checks.daily[i], onClick: () => toggleCheck("daily", i) })), /* @__PURE__ */ React.createElement("span", { className: "font-serif", style: {
+      flex: 1,
+      ...TODO_TEXT_STYLE,
+      color: checks.daily[i] ? "var(--ink-3)" : "var(--ink)",
+      textDecoration: checks.daily[i] ? "line-through" : "none",
+      textDecorationColor: "var(--ink-4)"
+    } }, t.text))))), /* @__PURE__ */ React.createElement("section", { style: {
+      background: "var(--paper-2)",
+      border: "1px solid var(--rule-soft)",
+      borderRadius: 10,
+      padding: isMobile ? "16px 16px" : "20px 22px"
+    } }, /* @__PURE__ */ React.createElement(Eyebrow, { rule: false }, "Weather \xB7 Mood"), /* @__PURE__ */ React.createElement("div", { style: {
+      display: "grid",
+      gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+      gap: 14,
+      marginTop: 14
+    } }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "font-serif", style: { fontSize: 26, color: "var(--ink)", fontWeight: 500 } }, "\u22122\xB0", /* @__PURE__ */ React.createElement("span", { style: { color: "var(--ink-3)", fontSize: 18 } }, " / 4\xB0")), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, letterSpacing: "0.1em", color: "var(--ink-3)", textTransform: "uppercase" } }, "cold \xB7 clear")), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 6 } }, [1, 2, 3, 4, 5].map((n) => /* @__PURE__ */ React.createElement("span", { key: n, style: {
+      width: 16,
+      height: 16,
+      borderRadius: 999,
+      border: "1px solid var(--rule)",
+      background: n <= 4 ? "var(--accent)" : "transparent"
+    } }))), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, letterSpacing: "0.1em", color: "var(--ink-3)", textTransform: "uppercase", marginTop: 6 } }, "steady \xB7 hopeful")))), /* @__PURE__ */ React.createElement("section", { style: {
+      padding: isMobile ? "16px 16px" : "20px 22px",
+      border: "1px dashed var(--rule)",
+      borderRadius: 10
+    } }, /* @__PURE__ */ React.createElement(Eyebrow, { rule: false }, "One Line"), /* @__PURE__ */ React.createElement("p", { className: "font-serif", style: {
+      margin: "10px 0 0",
+      fontSize: 12,
+      color: "var(--ink)",
+      fontStyle: "italic",
+      lineHeight: 1.5
+    } }, '"The new year smelled of pine and cold paper."')), /* @__PURE__ */ React.createElement("section", { style: {
+      position: "relative",
+      padding: isMobile ? 16 : 20,
+      border: "1px solid var(--rule-soft)",
+      borderRadius: 10,
+      background: "var(--paper-2)",
+      overflow: "hidden"
+    } }, /* @__PURE__ */ React.createElement("div", { className: "dot-grid", style: {
+      position: "absolute",
+      inset: 0,
+      opacity: 0.5,
+      pointerEvents: "none"
+    } }), /* @__PURE__ */ React.createElement("div", { className: "eyebrow", style: { position: "relative", marginBottom: 10 } }, "Diary Summary"), /* @__PURE__ */ React.createElement("div", { className: "font-serif", style: {
+      position: "relative",
+      margin: 0,
+      fontSize: 12,
+      lineHeight: 1.7,
+      color: "var(--ink)",
+      maxHeight: isMobile ? "none" : 280,
+      overflowY: "auto",
+      paddingRight: 4
+    } }, DATA && DATA.journal && DATA.journal.day && DATA.journal.day[dateKey] && DATA.journal.day[dateKey].summary && DATA.journal.day[dateKey].summary.body || DATA && DATA.DIARY_SUMMARY_BY_DAY[dateKey] ? /* @__PURE__ */ React.createElement("p", { style: {
+      margin: 0,
+      fontSize: 12,
+      lineHeight: 1.7,
+      color: "var(--ink)",
+      fontStyle: "italic",
+      whiteSpace: "pre-wrap"
+    } }, DATA && DATA.journal && DATA.journal.day && DATA.journal.day[dateKey] && DATA.journal.day[dateKey].summary && DATA.journal.day[dateKey].summary.body || DATA && DATA.DIARY_SUMMARY_BY_DAY[dateKey]) : /* @__PURE__ */ React.createElement("p", { style: { margin: 0, color: "var(--ink-3)", fontStyle: "italic" } }, "No summary yet for today."))), /* @__PURE__ */ React.createElement("div", { style: {
+      marginTop: "auto",
+      display: "flex",
+      justifyContent: "flex-end",
+      color: "var(--ink-3)",
       fontSize: 10,
-      opacity: 0.75,
-      letterSpacing: "0.02em",
-      whiteSpace: "nowrap"
-    } }, hh(e.startHour), " \u2013 ", hh(e.endHour)));
-  }))))), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 24 } }, /* @__PURE__ */ React.createElement("section", { style: {
-    background: "var(--paper-2)",
-    border: "1px solid var(--rule-soft)",
-    borderRadius: 10,
-    padding: "20px 22px"
-  } }, /* @__PURE__ */ React.createElement(Eyebrow, { rule: false }, "Must Do"), /* @__PURE__ */ React.createElement("ul", { style: {
-    listStyle: "none",
-    margin: "14px 0 0",
-    padding: 0,
-    display: "flex",
-    flexDirection: "column",
-    gap: 12
-  } }, mustDo.map((t, i) => /* @__PURE__ */ React.createElement("li", { key: i, style: { display: "flex", alignItems: "flex-start", gap: 10 } }, /* @__PURE__ */ React.createElement("span", { style: { paddingTop: 4 } }, /* @__PURE__ */ React.createElement(Tick, { on: checks.daily[i], onClick: () => toggleCheck("daily", i) })), /* @__PURE__ */ React.createElement("span", { className: "font-serif", style: {
-    flex: 1,
-    ...TODO_TEXT_STYLE,
-    color: checks.daily[i] ? "var(--ink-3)" : "var(--ink)",
-    textDecoration: checks.daily[i] ? "line-through" : "none",
-    textDecorationColor: "var(--ink-4)"
-  } }, t.text))))), /* @__PURE__ */ React.createElement("section", { style: {
-    background: "var(--paper-2)",
-    border: "1px solid var(--rule-soft)",
-    borderRadius: 10,
-    padding: "20px 22px"
-  } }, /* @__PURE__ */ React.createElement(Eyebrow, { rule: false }, "Weather \xB7 Mood"), /* @__PURE__ */ React.createElement("div", { style: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: 14,
-    marginTop: 14
-  } }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "font-serif", style: { fontSize: 26, color: "var(--ink)", fontWeight: 500 } }, "\u22122\xB0", /* @__PURE__ */ React.createElement("span", { style: { color: "var(--ink-3)", fontSize: 18 } }, " / 4\xB0")), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, letterSpacing: "0.1em", color: "var(--ink-3)", textTransform: "uppercase" } }, "cold \xB7 clear")), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 6 } }, [1, 2, 3, 4, 5].map((n) => /* @__PURE__ */ React.createElement("span", { key: n, style: {
-    width: 16,
-    height: 16,
-    borderRadius: 999,
-    border: "1px solid var(--rule)",
-    background: n <= 4 ? "var(--accent)" : "transparent"
-  } }))), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, letterSpacing: "0.1em", color: "var(--ink-3)", textTransform: "uppercase", marginTop: 6 } }, "steady \xB7 hopeful")))), /* @__PURE__ */ React.createElement("section", { style: {
-    padding: "20px 22px",
-    border: "1px dashed var(--rule)",
-    borderRadius: 10
-  } }, /* @__PURE__ */ React.createElement(Eyebrow, { rule: false }, "One Line"), /* @__PURE__ */ React.createElement("p", { className: "font-serif", style: {
-    margin: "10px 0 0",
-    fontSize: 12,
-    color: "var(--ink)",
-    fontStyle: "italic",
-    lineHeight: 1.5
-  } }, '"The new year smelled of pine and cold paper."')), /* @__PURE__ */ React.createElement("section", { style: {
-    position: "relative",
-    padding: 20,
-    border: "1px solid var(--rule-soft)",
-    borderRadius: 10,
-    background: "var(--paper-2)",
-    overflow: "hidden"
-  } }, /* @__PURE__ */ React.createElement("div", { className: "dot-grid", style: {
-    position: "absolute",
-    inset: 0,
-    opacity: 0.5,
-    pointerEvents: "none"
-  } }), /* @__PURE__ */ React.createElement("div", { className: "eyebrow", style: { position: "relative", marginBottom: 10 } }, "Diary Summary"), /* @__PURE__ */ React.createElement("div", { className: "font-serif", style: {
-    position: "relative",
-    margin: 0,
-    fontSize: 12,
-    lineHeight: 1.7,
-    color: "var(--ink)",
-    maxHeight: 280,
-    overflowY: "auto",
-    paddingRight: 4
-  } }, DATA && DATA.journal && DATA.journal.day && DATA.journal.day[dateKey] && DATA.journal.day[dateKey].summary && DATA.journal.day[dateKey].summary.body || DATA && DATA.DIARY_SUMMARY_BY_DAY[dateKey] ? /* @__PURE__ */ React.createElement("p", { style: {
-    margin: 0,
-    fontSize: 12,
-    lineHeight: 1.7,
-    color: "var(--ink)",
-    fontStyle: "italic",
-    whiteSpace: "pre-wrap"
-  } }, DATA && DATA.journal && DATA.journal.day && DATA.journal.day[dateKey] && DATA.journal.day[dateKey].summary && DATA.journal.day[dateKey].summary.body || DATA && DATA.DIARY_SUMMARY_BY_DAY[dateKey]) : /* @__PURE__ */ React.createElement("p", { style: { margin: 0, color: "var(--ink-3)", fontStyle: "italic" } }, "No summary yet for today."))), /* @__PURE__ */ React.createElement("div", { style: {
-    marginTop: "auto",
-    display: "flex",
-    justifyContent: "flex-end",
-    color: "var(--ink-3)",
-    fontSize: 10,
-    letterSpacing: "0.2em",
-    textTransform: "uppercase"
-  } }, /* @__PURE__ */ React.createElement("span", null, "Day ", Math.floor((parseDateKey(dateKey) - parseDateKey(`${parseDateKey(dateKey).getUTCFullYear()}-01-01`)) / 864e5) + 1, " / 365"))));
+      letterSpacing: "0.2em",
+      textTransform: "uppercase"
+    } }, /* @__PURE__ */ React.createElement("span", null, "Day ", Math.floor((parseDateKey(dateKey) - parseDateKey(`${parseDateKey(dateKey).getUTCFullYear()}-01-01`)) / 864e5) + 1, " / 365"))));
+  };
   var DOW = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   var Monthly = ({ dateKey }) => {
     const cells = buildMonthlyCells(dateKey);
@@ -2354,6 +2362,7 @@ var JournalRuntime = (() => {
     const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
     const [view, setView] = useState("daily");
     const [cursorKey, setCursorKey] = useState(TODAY_KEY);
+    const [isMobile, setIsMobile] = useState(getIsMobileViewport);
     const weekDateKeys = useMemo(() => getWeekDateKeys(cursorKey), [cursorKey]);
     const weekDays = useMemo(() => getWeekData(cursorKey), [cursorKey]);
     const weekPriorities = useMemo(() => getWeekPriorities(weekDateKeys), [weekDateKeys]);
@@ -2402,6 +2411,12 @@ var JournalRuntime = (() => {
     useEffect(() => {
       setChecks((c) => ({ ...c, daily: dailyTodos.map((x) => x.done) }));
     }, [dailyTodos]);
+    useEffect(() => {
+      const onResize = () => setIsMobile(getIsMobileViewport());
+      onResize();
+      window.addEventListener("resize", onResize);
+      return () => window.removeEventListener("resize", onResize);
+    }, []);
     const label = view === "daily" ? formatDisplayDate(cursorKey, { weekday: "short", month: "short", day: "numeric" }).replace(",", " \xB7") : view === "weekly" ? (() => {
       const { week, year } = getISOWeek(cursorKey);
       return `Week ${week} \xB7 ${year}`;
@@ -2412,18 +2427,20 @@ var JournalRuntime = (() => {
     const onNext = () => {
       setCursorKey((current) => view === "daily" ? addDays(current, 1) : view === "weekly" ? addDays(current, 7) : addMonths(current, 1));
     };
-    return /* @__PURE__ */ React.createElement("div", { className: "app-bg", "data-screen-label": `Journal \xB7 ${view}` }, /* @__PURE__ */ React.createElement("div", { className: "max-shell" }, /* @__PURE__ */ React.createElement(Header, { view, setView, label, onPrev, onNext }), /* @__PURE__ */ React.createElement("main", null, view === "weekly" && /* @__PURE__ */ React.createElement("div", { className: "fadein", style: {
+    return /* @__PURE__ */ React.createElement("div", { className: "app-bg", "data-screen-label": `Journal \xB7 ${view}` }, /* @__PURE__ */ React.createElement("div", { className: "max-shell" }, /* @__PURE__ */ React.createElement(Header, { view, setView, label, onPrev, onNext, isMobile }), /* @__PURE__ */ React.createElement("main", null, view === "weekly" && /* @__PURE__ */ React.createElement("div", { className: "fadein", style: {
       display: "flex",
       alignItems: "stretch",
       justifyContent: "center",
-      gap: 0
+      flexDirection: isMobile ? "column" : "row",
+      gap: isMobile ? 16 : 0
     } }, /* @__PURE__ */ React.createElement(
       WeeklyLeft,
       {
         checks,
         toggleCheck,
         priorities: weekPriorities,
-        weekDays
+        weekDays,
+        isMobile
       }
     ), /* @__PURE__ */ React.createElement(
       WeeklyRight,
@@ -2435,7 +2452,8 @@ var JournalRuntime = (() => {
         weekStartKey: getWeekStartKey(cursorKey),
         weekNumber: getWeekNumber(cursorKey),
         weekNotes,
-        weekReflection
+        weekReflection,
+        isMobile
       }
     )), view === "daily" && /* @__PURE__ */ React.createElement(
       Daily,
@@ -2444,7 +2462,8 @@ var JournalRuntime = (() => {
         toggleCheck,
         dateKey: cursorKey,
         events: dailyEvents,
-        mustDo: dailyTodos
+        mustDo: dailyTodos,
+        isMobile
       }
     ), view === "monthly" && /* @__PURE__ */ React.createElement(Monthly, { dateKey: cursorKey })), /* @__PURE__ */ React.createElement("footer", { style: {
       marginTop: 48,

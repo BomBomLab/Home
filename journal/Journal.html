@@ -272,6 +272,51 @@
     width: 1px;
     background: linear-gradient(to bottom, transparent, oklch(0.50 0.02 55 / 0.20), transparent);
   }
+
+  @media (max-width: 860px) {
+    .app-bg {
+      padding: 20px 14px 40px;
+      overflow-x: hidden;
+    }
+
+    .max-shell {
+      max-width: 100%;
+    }
+
+    .pill-group {
+      width: 100%;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      flex: 1 1 30%;
+      min-width: 84px;
+      text-align: center;
+    }
+
+    .pagebreak {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, oklch(0.50 0.02 55 / 0.20), transparent);
+    }
+
+    .cal-cell {
+      min-height: 76px;
+      padding: 6px 7px;
+    }
+
+    .cal-num {
+      width: 20px;
+      height: 20px;
+      font-size: 12px;
+    }
+
+    input,
+    textarea {
+      font-size: 16px;
+    }
+  }
 </style>
 <body data-grain="on">
 <div id="root"></div>

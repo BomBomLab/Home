@@ -2,6 +2,7 @@
 // All three views (Daily / Weekly / Monthly) share a single token system.
 
 const { useState, useMemo, useEffect } = React;
+const MOBILE_BREAKPOINT = 860;
 
 // ─────────────────────────── Theme definitions ───────────────────────────
 // Each palette keeps the SAME structural tokens — only values change.
@@ -74,6 +75,10 @@ const Plus = ({size=12}) => (
 
 // ─────────────────────────── Data ───────────────────────────
 const DOW_LABELS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+
+const getIsMobileViewport = () => (
+  typeof window !== 'undefined' ? window.innerWidth <= MOBILE_BREAKPOINT : false
+);
 
 // Pick a single "anchor" event title to summarize a day:
 // the longest event that is not rest (sleep), travel, or life.hygiene.
@@ -399,14 +404,17 @@ const EventChip = ({ event, block = false }) => {
 };
 
 // ─────────────────────────── Header ───────────────────────────
-const Header = ({ view, setView, label, onPrev, onNext }) => (
+const Header = ({ view, setView, label, onPrev, onNext, isMobile }) => (
   <header style={{
     display: 'grid',
-    gridTemplateColumns: '1fr auto 1fr',
+    gridTemplateColumns: isMobile ? '1fr' : '1fr auto 1fr',
     alignItems: 'center',
-    marginBottom: 28, padding: '0 6px',
+    justifyItems: isMobile ? 'center' : 'stretch',
+    marginBottom: isMobile ? 22 : 28,
+    padding: isMobile ? '0' : '0 6px',
+    rowGap: isMobile ? 12 : 0,
   }}>
-    <div />
+    <div style={{ display: isMobile ? 'none' : 'block' }} />
     <div className="pill-group" role="tablist">
       {['daily','weekly','monthly'].map(v => (
         <button key={v} className="pill" data-on={view===v} onClick={() => setView(v)}>
@@ -414,13 +422,13 @@ const Header = ({ view, setView, label, onPrev, onNext }) => (
         </button>
       ))}
     </div>
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10, justifySelf: 'end' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, justifySelf: isMobile ? 'center' : 'end' }}>
       <button type="button" className="icon-btn" onClick={onPrev} aria-label="Previous">
         <Chevron dir="left" />
       </button>
       <span style={{
         fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase',
-        color: 'var(--ink-2)', minWidth: 120, textAlign: 'center', fontWeight: 500,
+        color: 'var(--ink-2)', minWidth: isMobile ? 0 : 120, textAlign: 'center', fontWeight: 500,
       }}>
         {label}
       </span>
@@ -432,12 +440,12 @@ const Header = ({ view, setView, label, onPrev, onNext }) => (
 );
 
 // ─────────────────────────── Weekly: left page ───────────────────────────
-const WeeklyLeft = ({ checks, toggleCheck, priorities, weekDays }) => (
+const WeeklyLeft = ({ checks, toggleCheck, priorities, weekDays, isMobile }) => (
   <div className="paper-surface spine-shadow-r" style={{
-    borderRadius: '14px 0 0 14px',
-    padding: '44px 46px 40px',
-    width: '50%',
-    minHeight: 820,
+    borderRadius: isMobile ? 14 : '14px 0 0 14px',
+    padding: isMobile ? '28px 22px 24px' : '44px 46px 40px',
+    width: isMobile ? '100%' : '50%',
+    minHeight: isMobile ? 'auto' : 820,
     display: 'flex', flexDirection: 'column',
     position: 'relative',
   }}>
@@ -525,12 +533,12 @@ const WeeklyLeft = ({ checks, toggleCheck, priorities, weekDays }) => (
 );
 
 // ─────────────────────────── Weekly: right page ───────────────────────────
-const WeeklyRight = ({ checks, toggleCheck, setTodoText, todoTexts, weekStartKey, weekNumber, weekNotes, weekReflection }) => (
+const WeeklyRight = ({ checks, toggleCheck, setTodoText, todoTexts, weekStartKey, weekNumber, weekNotes, weekReflection, isMobile }) => (
   <div className="paper-surface spine-shadow-l" style={{
-    borderRadius: '0 14px 14px 0',
-    padding: '44px 46px 40px',
-    width: '50%',
-    minHeight: 820,
+    borderRadius: isMobile ? 14 : '0 14px 14px 0',
+    padding: isMobile ? '28px 22px 24px' : '44px 46px 40px',
+    width: isMobile ? '100%' : '50%',
+    minHeight: isMobile ? 'auto' : 820,
     display: 'flex', flexDirection: 'column',
     position: 'relative',
   }}>
@@ -598,7 +606,7 @@ const WeeklyRight = ({ checks, toggleCheck, setTodoText, todoTexts, weekStartKey
     <section>
       <Eyebrow>To Do</Eyebrow>
       <div style={{
-        display: 'grid', gridTemplateColumns: '1fr 1px 1fr', gap: 18,
+        display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1px 1fr', gap: 18,
         marginTop: 14,
       }}>
         <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -669,16 +677,20 @@ const SHOW_LABEL = (h) => h >= COMPRESS_END || h === 0 || h === 4;
 
 const EVENT_CATEGORIES = (DATA && DATA.CATEGORY_PALETTE) || {};
 
-const Daily = ({ checks, toggleCheck, dateKey, events, mustDo }) => (
+const Daily = ({ checks, toggleCheck, dateKey, events, mustDo, isMobile }) => {
+  const scheduleLabelWidth = isMobile ? 70 : 104;
+  const scheduleHeaderFont = isMobile ? 44 : 64;
+  return (
   <div className="paper-surface page-shadow fadein" style={{
     borderRadius: 14,
-    padding: '48px 56px',
+    padding: isMobile ? '26px 18px 22px' : '48px 56px',
     maxWidth: 1240, margin: '0 auto',
-    minHeight: 820,
+    minHeight: isMobile ? 'auto' : 820,
     display: 'grid',
-    gridTemplateColumns: '1.6fr 1fr',
-    gridTemplateRows: 'auto 1fr',
-    columnGap: 44, rowGap: 24,
+    gridTemplateColumns: isMobile ? '1fr' : '1.6fr 1fr',
+    gridTemplateRows: isMobile ? 'auto auto auto' : 'auto 1fr',
+    columnGap: isMobile ? 0 : 44,
+    rowGap: isMobile ? 18 : 24,
   }}>
     {/* Header */}
     <div style={{ gridColumn: '1 / -1' }}>
@@ -686,7 +698,7 @@ const Daily = ({ checks, toggleCheck, dateKey, events, mustDo }) => (
         {formatDisplayDate(dateKey, { weekday: 'long' })} · {dateKey.slice(8, 10)} · {dateKey.slice(5, 7)} · {dateKey.slice(0, 4)}
       </div>
       <h2 className="font-serif" style={{
-        margin: 0, fontSize: 64, fontWeight: 500, letterSpacing: '-0.01em', lineHeight: 1.05,
+        margin: 0, fontSize: scheduleHeaderFont, fontWeight: 500, letterSpacing: '-0.01em', lineHeight: 1.05,
       }}>
         <span style={{ color: 'var(--ink)', fontStyle: 'normal' }}>
           {parseDateKey(dateKey).getUTCDate()}
@@ -727,7 +739,7 @@ const Daily = ({ checks, toggleCheck, dateKey, events, mustDo }) => (
               const isLast = i === rows.length - 1;
               return (
                 <div key={row.h} style={{
-                  display: 'grid', gridTemplateColumns: '104px 1fr',
+                  display: 'grid', gridTemplateColumns: `${scheduleLabelWidth}px 1fr`,
                   height: row.height,
                   borderBottom: isLast ? 'none' : '1px solid var(--rule-soft)',
                 }}>
@@ -748,7 +760,7 @@ const Daily = ({ checks, toggleCheck, dateKey, events, mustDo }) => (
           {/* Absolute-positioned event blocks */}
           <div style={{
             position: 'absolute',
-            left: 104, right: 0,
+            left: scheduleLabelWidth, right: 0,
             top: 0,
             bottom: 0,
             pointerEvents: 'none',
@@ -811,12 +823,12 @@ const Daily = ({ checks, toggleCheck, dateKey, events, mustDo }) => (
     </div>
 
     {/* Right: must-do → weather/mood → one line → morning pages (moved bottom) */}
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
       <section style={{
         background: 'var(--paper-2)',
         border: '1px solid var(--rule-soft)',
         borderRadius: 10,
-        padding: '20px 22px',
+        padding: isMobile ? '16px 16px' : '20px 22px',
       }}>
         <Eyebrow rule={false}>Must Do</Eyebrow>
         <ul style={{ listStyle: 'none', margin: '14px 0 0', padding: 0,
@@ -844,11 +856,11 @@ const Daily = ({ checks, toggleCheck, dateKey, events, mustDo }) => (
         background: 'var(--paper-2)',
         border: '1px solid var(--rule-soft)',
         borderRadius: 10,
-        padding: '20px 22px',
+        padding: isMobile ? '16px 16px' : '20px 22px',
       }}>
         <Eyebrow rule={false}>Weather · Mood</Eyebrow>
         <div style={{
-          display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginTop: 14,
+          display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 14, marginTop: 14,
         }}>
           <div>
             <div className="font-serif" style={{ fontSize: 26, color: 'var(--ink)', fontWeight: 500 }}>
@@ -876,7 +888,7 @@ const Daily = ({ checks, toggleCheck, dateKey, events, mustDo }) => (
       </section>
 
       <section style={{
-        padding: '20px 22px',
+        padding: isMobile ? '16px 16px' : '20px 22px',
         border: '1px dashed var(--rule)',
         borderRadius: 10,
       }}>
@@ -890,7 +902,7 @@ const Daily = ({ checks, toggleCheck, dateKey, events, mustDo }) => (
       </section>
 
       <section style={{
-        position: 'relative', padding: 20,
+        position: 'relative', padding: isMobile ? 16 : 20,
         border: '1px solid var(--rule-soft)',
         borderRadius: 10,
         background: 'var(--paper-2)',
@@ -903,7 +915,7 @@ const Daily = ({ checks, toggleCheck, dateKey, events, mustDo }) => (
         <div className="font-serif" style={{
           position: 'relative', margin: 0, fontSize: 12, lineHeight: 1.7,
           color: 'var(--ink)',
-          maxHeight: 280, overflowY: 'auto', paddingRight: 4,
+          maxHeight: isMobile ? 'none' : 280, overflowY: 'auto', paddingRight: 4,
         }}>
           {((DATA && DATA.journal && DATA.journal.day && DATA.journal.day[dateKey] && DATA.journal.day[dateKey].summary && DATA.journal.day[dateKey].summary.body)
             || (DATA && DATA.DIARY_SUMMARY_BY_DAY[dateKey])) ? (
@@ -930,6 +942,7 @@ const Daily = ({ checks, toggleCheck, dateKey, events, mustDo }) => (
     </div>
   </div>
 );
+};
 
 // ─────────────────────────── Monthly ───────────────────────────
 const DOW = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
@@ -1074,6 +1087,7 @@ const App = () => {
   const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
   const [view, setView] = useState('daily');
   const [cursorKey, setCursorKey] = useState(TODAY_KEY);
+  const [isMobile, setIsMobile] = useState(getIsMobileViewport);
   const weekDateKeys = useMemo(() => getWeekDateKeys(cursorKey), [cursorKey]);
   const weekDays = useMemo(() => getWeekData(cursorKey), [cursorKey]);
   const weekPriorities = useMemo(() => getWeekPriorities(weekDateKeys), [weekDateKeys]);
@@ -1134,6 +1148,13 @@ const App = () => {
     setChecks(c => ({ ...c, daily: dailyTodos.map(x => x.done) }));
   }, [dailyTodos]);
 
+  useEffect(() => {
+    const onResize = () => setIsMobile(getIsMobileViewport());
+    onResize();
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
   const label = view === 'daily'
     ? formatDisplayDate(cursorKey, { weekday: 'short', month: 'short', day: 'numeric' }).replace(',', ' ·')
     : view === 'weekly'
@@ -1158,19 +1179,21 @@ const App = () => {
   return (
     <div className="app-bg" data-screen-label={`Journal · ${view}`}>
       <div className="max-shell">
-        <Header view={view} setView={setView} label={label} onPrev={onPrev} onNext={onNext} />
+        <Header view={view} setView={setView} label={label} onPrev={onPrev} onNext={onNext} isMobile={isMobile} />
 
         <main>
           {view === 'weekly' && (
             <div className="fadein" style={{
               display: 'flex', alignItems: 'stretch', justifyContent: 'center',
-              gap: 0,
+              flexDirection: isMobile ? 'column' : 'row',
+              gap: isMobile ? 16 : 0,
             }}>
               <WeeklyLeft
                 checks={checks}
                 toggleCheck={toggleCheck}
                 priorities={weekPriorities}
                 weekDays={weekDays}
+                isMobile={isMobile}
               />
               <WeeklyRight
                 checks={checks}
@@ -1181,6 +1204,7 @@ const App = () => {
                 weekNumber={getWeekNumber(cursorKey)}
                 weekNotes={weekNotes}
                 weekReflection={weekReflection}
+                isMobile={isMobile}
               />
             </div>
           )}
@@ -1191,6 +1215,7 @@ const App = () => {
               dateKey={cursorKey}
               events={dailyEvents}
               mustDo={dailyTodos}
+              isMobile={isMobile}
             />
           )}
           {view === 'monthly' && (
