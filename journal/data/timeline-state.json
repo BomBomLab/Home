@@ -1,0 +1,633 @@
+{
+  "version": 1,
+  "timezone": "Asia/Shanghai",
+  "taxonomy": {
+    "categories": [
+      {
+        "id": "life",
+        "label": "Life",
+        "color": "var(--cat-life)",
+        "children": [
+          {
+            "id": "life.meal",
+            "label": "Meals"
+          },
+          {
+            "id": "life.hygiene",
+            "label": "Hygiene"
+          },
+          {
+            "id": "life.chores",
+            "label": "Chores"
+          },
+          {
+            "id": "life.shopping",
+            "label": "Shopping"
+          },
+          {
+            "id": "life.errand",
+            "label": "Errands"
+          },
+          {
+            "id": "life.other",
+            "label": "Other Life"
+          }
+        ]
+      },
+      {
+        "id": "work",
+        "label": "Work",
+        "color": "var(--cat-work)",
+        "children": [
+          {
+            "id": "work.coding",
+            "label": "Coding"
+          },
+          {
+            "id": "work.meeting",
+            "label": "Meetings"
+          },
+          {
+            "id": "work.writing",
+            "label": "Writing"
+          },
+          {
+            "id": "work.communication",
+            "label": "Communication"
+          },
+          {
+            "id": "work.other",
+            "label": "Other Work"
+          }
+        ]
+      },
+      {
+        "id": "study",
+        "label": "Study",
+        "color": "var(--cat-study)",
+        "children": [
+          {
+            "id": "study.reading",
+            "label": "Reading"
+          },
+          {
+            "id": "study.course",
+            "label": "Courses"
+          },
+          {
+            "id": "study.practice",
+            "label": "Practice"
+          },
+          {
+            "id": "study.review",
+            "label": "Review"
+          },
+          {
+            "id": "study.other",
+            "label": "Other Study"
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "label": "Exercise",
+        "color": "var(--cat-exercise)",
+        "children": [
+          {
+            "id": "exercise.walk",
+            "label": "Walks"
+          },
+          {
+            "id": "exercise.workout",
+            "label": "Workouts"
+          },
+          {
+            "id": "exercise.stretch",
+            "label": "Stretching"
+          },
+          {
+            "id": "exercise.other",
+            "label": "Other Exercise"
+          }
+        ]
+      },
+      {
+        "id": "entertainment",
+        "label": "Entertainment",
+        "color": "var(--cat-entertainment)",
+        "children": [
+          {
+            "id": "entertainment.video",
+            "label": "Video"
+          },
+          {
+            "id": "entertainment.game",
+            "label": "Games"
+          },
+          {
+            "id": "entertainment.social_media",
+            "label": "Social Media"
+          },
+          {
+            "id": "entertainment.music",
+            "label": "Music"
+          },
+          {
+            "id": "entertainment.other",
+            "label": "Other Entertainment"
+          }
+        ]
+      },
+      {
+        "id": "health",
+        "label": "Health",
+        "color": "var(--cat-health)",
+        "children": [
+          {
+            "id": "health.rest",
+            "label": "Recovery"
+          },
+          {
+            "id": "health.medication",
+            "label": "Medication"
+          },
+          {
+            "id": "health.pain",
+            "label": "Symptom Care"
+          },
+          {
+            "id": "health.hospital",
+            "label": "Medical Visit"
+          },
+          {
+            "id": "health.other",
+            "label": "Other Health"
+          }
+        ]
+      },
+      {
+        "id": "social",
+        "label": "Social",
+        "color": "var(--cat-social)",
+        "children": [
+          {
+            "id": "social.chat",
+            "label": "Chat"
+          },
+          {
+            "id": "social.call",
+            "label": "Calls"
+          },
+          {
+            "id": "social.family",
+            "label": "Family Time"
+          },
+          {
+            "id": "social.other",
+            "label": "Other Social"
+          }
+        ]
+      },
+      {
+        "id": "care",
+        "label": "Care",
+        "color": "var(--cat-care)",
+        "children": [
+          {
+            "id": "care.pet",
+            "label": "Pet Care"
+          },
+          {
+            "id": "care.household",
+            "label": "Household Care"
+          },
+          {
+            "id": "care.self",
+            "label": "Self Care"
+          },
+          {
+            "id": "care.other",
+            "label": "Other Care"
+          }
+        ]
+      },
+      {
+        "id": "travel",
+        "label": "Travel",
+        "color": "var(--cat-travel)",
+        "children": [
+          {
+            "id": "travel.commute",
+            "label": "Commute"
+          },
+          {
+            "id": "travel.transit",
+            "label": "Transit"
+          },
+          {
+            "id": "travel.other",
+            "label": "Other Travel"
+          }
+        ]
+      },
+      {
+        "id": "rest",
+        "label": "Rest",
+        "color": "var(--cat-rest)",
+        "children": [
+          {
+            "id": "rest.sleep",
+            "label": "Sleep"
+          },
+          {
+            "id": "rest.nap",
+            "label": "Nap"
+          },
+          {
+            "id": "rest.idle",
+            "label": "Idle Time"
+          },
+          {
+            "id": "rest.other",
+            "label": "Other Rest"
+          }
+        ]
+      }
+    ],
+    "eventNodes": [
+      {
+        "id": "evt.breakfast",
+        "label": "Breakfast",
+        "aliases": [
+          "breakfast",
+          "morning meal"
+        ],
+        "parentId": "life.meal",
+        "status": "official"
+      },
+      {
+        "id": "evt.lunch",
+        "label": "Lunch",
+        "aliases": [
+          "lunch",
+          "midday meal"
+        ],
+        "parentId": "life.meal",
+        "status": "official"
+      },
+      {
+        "id": "evt.dinner",
+        "label": "Dinner",
+        "aliases": [
+          "dinner",
+          "evening meal"
+        ],
+        "parentId": "life.meal",
+        "status": "official"
+      },
+      {
+        "id": "evt.shower",
+        "label": "Shower",
+        "aliases": [
+          "shower",
+          "wash up"
+        ],
+        "parentId": "life.hygiene",
+        "status": "official"
+      },
+      {
+        "id": "evt.cleanup",
+        "label": "Cleanup",
+        "aliases": [
+          "room reset",
+          "tidying up"
+        ],
+        "parentId": "life.chores",
+        "status": "official"
+      },
+      {
+        "id": "evt.commute",
+        "label": "Commute",
+        "aliases": [
+          "commute",
+          "ride to work",
+          "ride home"
+        ],
+        "parentId": "travel.commute",
+        "status": "official"
+      },
+      {
+        "id": "evt.focus_coding",
+        "label": "Focused Coding",
+        "aliases": [
+          "coding",
+          "shipping code",
+          "implementation"
+        ],
+        "parentId": "work.coding",
+        "status": "official"
+      },
+      {
+        "id": "evt.meeting",
+        "label": "Meeting",
+        "aliases": [
+          "meeting",
+          "sync"
+        ],
+        "parentId": "work.meeting",
+        "status": "official"
+      },
+      {
+        "id": "evt.reading",
+        "label": "Reading",
+        "aliases": [
+          "reading",
+          "read a book"
+        ],
+        "parentId": "study.reading",
+        "status": "official"
+      },
+      {
+        "id": "evt.learning",
+        "label": "Course Study",
+        "aliases": [
+          "course",
+          "studying",
+          "lesson"
+        ],
+        "parentId": "study.course",
+        "status": "official"
+      },
+      {
+        "id": "evt.walk",
+        "label": "Walk",
+        "aliases": [
+          "walk",
+          "go for a walk"
+        ],
+        "parentId": "exercise.walk",
+        "status": "official"
+      },
+      {
+        "id": "evt.workout",
+        "label": "Workout",
+        "aliases": [
+          "workout",
+          "training"
+        ],
+        "parentId": "exercise.workout",
+        "status": "official"
+      },
+      {
+        "id": "evt.watch_show",
+        "label": "Watch a Show",
+        "aliases": [
+          "watching a show",
+          "tv time"
+        ],
+        "parentId": "entertainment.video",
+        "status": "official"
+      },
+      {
+        "id": "evt.short_video",
+        "label": "Short Video Scroll",
+        "aliases": [
+          "short videos",
+          "reels",
+          "scrolling videos"
+        ],
+        "parentId": "entertainment.social_media",
+        "status": "official"
+      },
+      {
+        "id": "evt.phone_scroll",
+        "label": "Phone Scroll",
+        "aliases": [
+          "phone scrolling",
+          "doomscrolling"
+        ],
+        "parentId": "entertainment.social_media",
+        "status": "official"
+      },
+      {
+        "id": "evt.headache_rest",
+        "label": "Headache Recovery",
+        "aliases": [
+          "resting with a headache"
+        ],
+        "parentId": "health.rest",
+        "status": "official"
+      },
+      {
+        "id": "evt.medication",
+        "label": "Medication",
+        "aliases": [
+          "taking medicine",
+          "medication"
+        ],
+        "parentId": "health.medication",
+        "status": "official"
+      },
+      {
+        "id": "evt.hospital_visit",
+        "label": "Medical Visit",
+        "aliases": [
+          "clinic visit",
+          "hospital visit",
+          "doctor appointment"
+        ],
+        "parentId": "health.hospital",
+        "status": "official"
+      },
+      {
+        "id": "evt.chatting",
+        "label": "Chat",
+        "aliases": [
+          "chatting",
+          "replying to messages"
+        ],
+        "parentId": "social.chat",
+        "status": "official"
+      },
+      {
+        "id": "evt.sleep",
+        "label": "Sleep",
+        "aliases": [
+          "sleep",
+          "went to sleep"
+        ],
+        "parentId": "rest.sleep",
+        "status": "official"
+      },
+      {
+        "id": "evt.nap",
+        "label": "Nap",
+        "aliases": [
+          "nap",
+          "power nap"
+        ],
+        "parentId": "rest.nap",
+        "status": "official"
+      }
+    ]
+  },
+  "facts": {
+    "2026-04-23": {
+      "status": "draft",
+      "updatedAt": "2026-04-23T13:24:56.186Z",
+      "source": null,
+      "events": [
+        {
+          "id": "fact:evt-commute:2026-04-23T11-56-00-000Z",
+          "startAt": "2026-04-23T11:56:00.000Z",
+          "endAt": "2026-04-23T13:14:00.000Z",
+          "title": "下班通勤回家",
+          "note": "下班后先骑电动车到地铁站，再坐10号线转5号线再转8号线，到家附近后由家里人骑电动车来接。整段从下班到到家约1小时18分钟，换乘多，通勤负担重，回到家时已经比较累。",
+          "categoryId": "travel",
+          "subcategoryId": "travel.commute",
+          "eventNodeId": "evt.commute",
+          "tags": [
+            "下班",
+            "通勤",
+            "回家",
+            "疲惫"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        }
+      ]
+    },
+    "2026-04-24": {
+      "status": "draft",
+      "updatedAt": "2026-04-25T03:06:38.443Z",
+      "source": null,
+      "events": [
+        {
+          "id": "fact:evt-sleep:2026-04-23T16-20-00-000Z",
+          "startAt": "2026-04-23T16:20:00.000Z",
+          "endAt": "2026-04-23T23:40:00.000Z",
+          "title": "睡觉",
+          "note": "00:20 说要睡觉。今晚下班后通勤很长，到家后先玩手机和电脑，后来把建模做完，stickc 暂时没搞定，困了之后收工。平时上班日一般 7:40 起床。",
+          "categoryId": "rest",
+          "subcategoryId": "rest.sleep",
+          "eventNodeId": "evt.sleep",
+          "tags": [
+            "睡觉",
+            "收工",
+            "上班日"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:evt-commute:2026-04-24T10-57-00-000Z",
+          "startAt": "2026-04-24T10:57:00.000Z",
+          "endAt": "2026-04-24T11:30:00.000Z",
+          "title": "下班回家",
+          "note": "18:57 确认还在路上，约 19:30 到家。",
+          "categoryId": "travel",
+          "subcategoryId": "travel.commute",
+          "eventNodeId": "evt.commute",
+          "tags": [
+            "下班",
+            "通勤",
+            "回家"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:evt-dinner:2026-04-24T11-30-00-000Z",
+          "startAt": "2026-04-24T11:30:00.000Z",
+          "endAt": "2026-04-24T12:00:00.000Z",
+          "title": "楼下吃大牛",
+          "note": "到家后先在家楼下吃了大牛，再回家。",
+          "categoryId": "life",
+          "subcategoryId": "life.meal",
+          "eventNodeId": "evt.dinner",
+          "tags": [
+            "晚饭",
+            "到家"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:evt-focus-coding:2026-04-24T12-00-00-000Z",
+          "startAt": "2026-04-24T12:00:00.000Z",
+          "endAt": "2026-04-24T15:59:00.000Z",
+          "title": "键帽建模和打印",
+          "note": "回家后继续忙工作，完成了没电小克键帽建模，又打印了键帽电池；过程中发现轴长度过长，还需要后续调整。",
+          "categoryId": "work",
+          "subcategoryId": "work.coding",
+          "eventNodeId": "evt.focus_coding",
+          "tags": [
+            "建模",
+            "3D打印",
+            "键帽",
+            "返工点"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:evt-shower:2026-04-24T15-59-00-000Z",
+          "startAt": "2026-04-24T15:59:00.000Z",
+          "endAt": "2026-04-24T15:59:59.000Z",
+          "title": "洗澡收尾",
+          "note": "忙到太晚，临近 00:30 才去洗澡准备睡。",
+          "categoryId": "life",
+          "subcategoryId": "life.hygiene",
+          "eventNodeId": "evt.shower",
+          "tags": [
+            "洗澡",
+            "收尾"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        }
+      ]
+    },
+    "2026-04-25": {
+      "status": "draft",
+      "updatedAt": "2026-04-25T03:06:57.581Z",
+      "source": null,
+      "events": [
+        {
+          "id": "fact:evt-shower:2026-04-24T16-30-00-000Z",
+          "startAt": "2026-04-24T16:30:00.000Z",
+          "endAt": "2026-04-24T16:50:00.000Z",
+          "title": "洗澡收尾",
+          "note": "前一晚忙工作忙到太晚，00:30 左右才去洗澡。",
+          "categoryId": "life",
+          "subcategoryId": "life.hygiene",
+          "eventNodeId": "evt.shower",
+          "tags": [
+            "洗澡",
+            "收尾",
+            "熬夜"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:evt-sleep:2026-04-24T16-50-00-000Z",
+          "startAt": "2026-04-24T16:50:00.000Z",
+          "endAt": "2026-04-24T23:40:00.000Z",
+          "title": "睡觉",
+          "note": "洗完澡后睡下。前一晚回家后继续做没电小克键帽建模和打印，发现轴长度过长。",
+          "categoryId": "rest",
+          "subcategoryId": "rest.sleep",
+          "eventNodeId": "evt.sleep",
+          "tags": [
+            "睡觉",
+            "熬夜后收工"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        }
+      ]
+    }
+  },
+  "proposals": []
+}
