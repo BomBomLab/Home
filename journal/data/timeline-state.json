@@ -499,7 +499,7 @@
     },
     "2026-04-24": {
       "status": "draft",
-      "updatedAt": "2026-04-25T03:06:38.443Z",
+      "updatedAt": "2026-04-25T06:53:54.150Z",
       "source": null,
       "events": [
         {
@@ -515,6 +515,88 @@
             "睡觉",
             "收工",
             "上班日"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:evt-chatting:2026-04-24T02-00-00-000Z",
+          "startAt": "2026-04-24T02:00:00.000Z",
+          "endAt": "2026-04-24T02:40:00.000Z",
+          "title": "和朋友喝 Peet's",
+          "note": "早上 10 点和朋友一起喝咖啡，喝的是 Peet's，觉得很好喝。",
+          "categoryId": "social",
+          "subcategoryId": "social.chat",
+          "eventNodeId": "evt.chatting",
+          "tags": [
+            "朋友",
+            "咖啡",
+            "Peet's"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:evt-lunch:2026-04-24T04-00-00-000Z",
+          "startAt": "2026-04-24T04:00:00.000Z",
+          "endAt": "2026-04-24T04:30:00.000Z",
+          "title": "午饭",
+          "note": "中午 12 点吃饭，进入午休时段。",
+          "categoryId": "life",
+          "subcategoryId": "life.meal",
+          "eventNodeId": "evt.lunch",
+          "tags": [
+            "午饭",
+            "午休"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:evt-watch-show:2026-04-24T04-30-00-000Z",
+          "startAt": "2026-04-24T04:30:00.000Z",
+          "endAt": "2026-04-24T05:30:00.000Z",
+          "title": "看《21世纪大君夫人》",
+          "note": "午休后半段在看《21世纪大君夫人》，一直看到 13:30 午休结束。",
+          "categoryId": "entertainment",
+          "subcategoryId": "entertainment.video",
+          "eventNodeId": "evt.watch_show",
+          "tags": [
+            "午休",
+            "追剧"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:evt-focus-coding:2026-04-24T05-30-00-000Z",
+          "startAt": "2026-04-24T05:30:00.000Z",
+          "endAt": "2026-04-24T08:00:00.000Z",
+          "title": "journal 初版设计",
+          "note": "下午开始创作 journal 项目，用 Claude Design 绘制了初版，把想法先落成可见界面。",
+          "categoryId": "work",
+          "subcategoryId": "work.coding",
+          "eventNodeId": "evt.focus_coding",
+          "tags": [
+            "journal",
+            "Claude Design",
+            "初版"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:evt-workout:2026-04-24T08-00-00-000Z",
+          "startAt": "2026-04-24T08:00:00.000Z",
+          "endAt": "2026-04-24T09:00:00.000Z",
+          "title": "健身",
+          "note": "下午 4 点去健身，持续一小时。",
+          "categoryId": "exercise",
+          "subcategoryId": "exercise.workout",
+          "eventNodeId": "evt.workout",
+          "tags": [
+            "健身",
+            "运动"
           ],
           "confidence": 0.5,
           "sourceMessageIds": []
@@ -590,7 +672,7 @@
     },
     "2026-04-25": {
       "status": "draft",
-      "updatedAt": "2026-04-25T03:06:57.581Z",
+      "updatedAt": "2026-04-25T15:25:30.770Z",
       "source": null,
       "events": [
         {
@@ -622,6 +704,181 @@
           "tags": [
             "睡觉",
             "熬夜后收工"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:到公司开工:2026-04-25T01-30-00-000Z",
+          "startAt": "2026-04-25T01:30:00.000Z",
+          "endAt": "2026-04-25T04:35:00.000Z",
+          "title": "到公司开工",
+          "note": "今天早上 09:30 才到公司。当前已知信息只够确认到岗时间和上午在公司进入工作态，不擅自补具体任务。",
+          "categoryId": "work",
+          "subcategoryId": "work.other",
+          "eventNodeId": "",
+          "tags": [
+            "到公司",
+            "上班",
+            "晚到公司"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:和前同事聚餐:2026-04-25T04-35-00-000Z",
+          "startAt": "2026-04-25T04:35:00.000Z",
+          "endAt": "2026-04-25T05:45:00.000Z",
+          "title": "和前同事聚餐",
+          "note": "中午在吃笨烟囱，和前同事聚餐。当前已知重点是吃饭和社交，不补更多细节。",
+          "categoryId": "social",
+          "subcategoryId": "social.chat",
+          "eventNodeId": "",
+          "tags": [
+            "午饭",
+            "聚餐",
+            "前同事",
+            "笨烟囱"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:和战友午饭局:2026-04-25T04-35-00-000Z",
+          "startAt": "2026-04-25T04:35:00.000Z",
+          "endAt": "2026-04-25T05:32:00.000Z",
+          "title": "和战友午饭局",
+          "note": "中午去吃笨烟囱，和曾经一起扛过事的人见面，不只是普通前同事饭局。13:32 左右结束。",
+          "categoryId": "social",
+          "subcategoryId": "social.chat",
+          "eventNodeId": "",
+          "tags": [
+            "午饭",
+            "聚餐",
+            "战友",
+            "笨烟囱"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:处理车被刮蹭:2026-04-25T07-00-00-000Z",
+          "startAt": "2026-04-25T07:00:00.000Z",
+          "endAt": "2026-04-25T08:00:00.000Z",
+          "title": "处理车被刮蹭",
+          "note": "下午三点车在地库被刮蹭，去处理现场并报了保险。原本下午的节奏被这次意外打断。",
+          "categoryId": "life",
+          "subcategoryId": "life.other",
+          "eventNodeId": "",
+          "tags": [
+            "车",
+            "刮蹭",
+            "保险",
+            "突发情况"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:下班送车去修理店:2026-04-25T10-30-00-000Z",
+          "startAt": "2026-04-25T10:30:00.000Z",
+          "endAt": "2026-04-25T12:15:00.000Z",
+          "title": "下班送车去修理店",
+          "note": "18:30 下班后把车顺路开去修理店，下午地库刮蹭后的处理继续往下走，之后再回家。",
+          "categoryId": "travel",
+          "subcategoryId": "travel.other",
+          "eventNodeId": "",
+          "tags": [
+            "下班",
+            "修理店",
+            "送修",
+            "车",
+            "顺路"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:到家收尾:2026-04-25T12-15-00-000Z",
+          "startAt": "2026-04-25T12:15:00.000Z",
+          "endAt": "2026-04-25T12:42:00.000Z",
+          "title": "到家收尾",
+          "note": "20:15 到家，车送修这条线算是先顺利收尾。到家后开始切回晚上的生活节奏。",
+          "categoryId": "life",
+          "subcategoryId": "life.other",
+          "eventNodeId": "",
+          "tags": [
+            "到家",
+            "收尾",
+            "送修后"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:evt-dinner:2026-04-25T12-42-00-000Z",
+          "startAt": "2026-04-25T12:42:00.000Z",
+          "endAt": "2026-04-25T13:00:00.000Z",
+          "title": "吃晚饭",
+          "note": "20:42 开始吃饭，21:00 吃完，晚上的节奏终于落下来。",
+          "categoryId": "life",
+          "subcategoryId": "life.meal",
+          "eventNodeId": "evt.dinner",
+          "tags": [
+            "晚饭",
+            "到家后"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:evt-watch-show:2026-04-25T13-00-00-000Z",
+          "startAt": "2026-04-25T13:00:00.000Z",
+          "endAt": "2026-04-25T14:00:00.000Z",
+          "title": "躺沙发看电视",
+          "note": "九点吃完饭，之后躺在沙发上看电视，整个人开始往休息区滑。",
+          "categoryId": "entertainment",
+          "subcategoryId": "entertainment.video",
+          "eventNodeId": "evt.watch_show",
+          "tags": [
+            "沙发",
+            "电视",
+            "休息"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:evt-focus-coding:2026-04-25T14-20-00-000Z",
+          "startAt": "2026-04-25T14:20:00.000Z",
+          "endAt": "2026-04-25T15:20:00.000Z",
+          "title": "重打电池小克",
+          "note": "晚上重新打印电池小克。昨天试过已经能和键帽严丝合缝卡上，手感很舒服，但整体有点长，所以今晚继续调长度再打一版。",
+          "categoryId": "work",
+          "subcategoryId": "work.coding",
+          "eventNodeId": "evt.focus_coding",
+          "tags": [
+            "3D打印",
+            "键帽",
+            "电池小克",
+            "迭代"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:evt-shower:2026-04-25T15-24-00-000Z",
+          "startAt": "2026-04-25T15:24:00.000Z",
+          "endAt": "2026-04-25T15:50:00.000Z",
+          "title": "洗澡准备休息",
+          "note": "23:24 说现在去洗澡，正式开始今晚的收尾，往睡觉那边滑。",
+          "categoryId": "life",
+          "subcategoryId": "life.hygiene",
+          "eventNodeId": "evt.shower",
+          "tags": [
+            "洗澡",
+            "休息前",
+            "收尾"
           ],
           "confidence": 0.5,
           "sourceMessageIds": []
