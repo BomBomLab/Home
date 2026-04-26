@@ -884,6 +884,187 @@
           "sourceMessageIds": []
         }
       ]
+    },
+    "2026-04-26": {
+      "status": "draft",
+      "updatedAt": "2026-04-26T06:48:10.971Z",
+      "source": null,
+      "events": [
+        {
+          "id": "fact:evt-phone-scroll:2026-04-25T16-19-00-000Z",
+          "startAt": "2026-04-25T16:19:00.000Z",
+          "endAt": "2026-04-25T17:00:00.000Z",
+          "title": "洗漱后玩手机",
+          "note": "00:19 刚洗漱完，接着躺着玩手机。中间一直在跟 phone gravity 对抗，直到至少 01:00 还没完全睡。",
+          "categoryId": "entertainment",
+          "subcategoryId": "entertainment.social_media",
+          "eventNodeId": "evt.phone_scroll",
+          "tags": [
+            "手机",
+            "熬夜",
+            "洗漱后"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:evt-phone-scroll:2026-04-26T03-00-00-000Z",
+          "startAt": "2026-04-26T03:00:00.000Z",
+          "endAt": "2026-04-26T03:20:00.000Z",
+          "title": "刚醒玩手机",
+          "note": "11 点刚醒，整个人晕晕的，先在床上玩了一会儿手机，枕头和 phone gravity 都很强。",
+          "categoryId": "entertainment",
+          "subcategoryId": "entertainment.social_media",
+          "eventNodeId": "evt.phone_scroll",
+          "tags": [
+            "刚醒",
+            "手机",
+            "赖床"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:evt-shower:2026-04-26T03-20-00-000Z",
+          "startAt": "2026-04-26T03:20:00.000Z",
+          "endAt": "2026-04-26T03:30:00.000Z",
+          "title": "起来刷牙",
+          "note": "虽然刚醒很晕，也很想继续躺，但 11:20 还是起来去刷牙了。",
+          "categoryId": "life",
+          "subcategoryId": "life.hygiene",
+          "eventNodeId": "evt.shower",
+          "tags": [
+            "起床",
+            "刷牙",
+            "努力"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:evt-focus-coding:2026-04-26T03-39-00-000Z",
+          "startAt": "2026-04-26T03:39:00.000Z",
+          "endAt": "2026-04-26T04:00:00.000Z",
+          "title": "电池小克打印翻车",
+          "note": "最晚打印的没电小克炒面了。昨晚继续优化长度后再打一版，但这一版先以失败告终。",
+          "categoryId": "work",
+          "subcategoryId": "work.coding",
+          "eventNodeId": "evt.focus_coding",
+          "tags": [
+            "3D打印",
+            "电池小克",
+            "炒面",
+            "翻车"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:evt-lunch:2026-04-26T04-16-00-000Z",
+          "startAt": "2026-04-26T04:16:00.000Z",
+          "endAt": "2026-04-26T05:00:00.000Z",
+          "title": "吃午饭",
+          "note": "12:16 开始吃午饭。上午刚醒、玩手机、起来刷牙，又经历了电池小克打印炒面的翻车，到中午终于切进吃饭和缓一缓的节奏。",
+          "categoryId": "life",
+          "subcategoryId": "life.meal",
+          "eventNodeId": "evt.lunch",
+          "tags": [
+            "午饭",
+            "休息日"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:忙自己的事:2026-04-26T05-00-00-000Z",
+          "startAt": "2026-04-26T05:00:00.000Z",
+          "endAt": "2026-04-26T06:46:00.000Z",
+          "title": "忙自己的事",
+          "note": "午饭后并不一直是 sofa-horizontal。13 点后有一段时间在忙自己的事，期间还处理了小克打印翻车、改模型拆分眼睛、重新开始打印等。",
+          "categoryId": "work",
+          "subcategoryId": "work.other",
+          "eventNodeId": "",
+          "tags": [
+            "自己的事",
+            "忙碌",
+            "休息日"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:evt-focus-coding:2026-04-26T05-13-00-000Z",
+          "startAt": "2026-04-26T05:13:00.000Z",
+          "endAt": "2026-04-26T05:40:00.000Z",
+          "title": "小克再次打印失败",
+          "note": "午饭后沙发 horizontal 没多久，又发现这版小克打印似乎也失败了。今天这条打印迭代线还在继续翻车。",
+          "categoryId": "work",
+          "subcategoryId": "work.coding",
+          "eventNodeId": "evt.focus_coding",
+          "tags": [
+            "3D打印",
+            "小克",
+            "翻车",
+            "迭代"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:evt-focus-coding:2026-04-26T05-35-00-000Z",
+          "startAt": "2026-04-26T05:35:00.000Z",
+          "endAt": "2026-04-26T06:20:00.000Z",
+          "title": "改模型拆分眼睛打印",
+          "note": "怀疑眼睛那块出问题后，直接修改模型，把眼睛拆出来单独打印。不再只停留在猜测法线，而是改制造方案规避风险。",
+          "categoryId": "work",
+          "subcategoryId": "work.coding",
+          "eventNodeId": "evt.focus_coding",
+          "tags": [
+            "建模",
+            "3D打印",
+            "眼睛",
+            "拆件"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:evt-focus-coding:2026-04-26T06-08-00-000Z",
+          "startAt": "2026-04-26T06:08:00.000Z",
+          "endAt": "2026-04-26T07:08:00.000Z",
+          "title": "重新开始打印小克",
+          "note": "把眼睛拆分出来之后，14:08 重新开始打印。这一轮还把模型打印速度调快了一点，预计一小时打完，不再沿用原来那套容易在眼睛处翻车的方案。",
+          "categoryId": "work",
+          "subcategoryId": "work.coding",
+          "eventNodeId": "evt.focus_coding",
+          "tags": [
+            "3D打印",
+            "小克",
+            "重新开始",
+            "调快速度",
+            "拆件后"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:出门办事:2026-04-26T06-46-00-000Z",
+          "startAt": "2026-04-26T06:46:00.000Z",
+          "endAt": "2026-04-26T08:30:00.000Z",
+          "title": "出门办事",
+          "note": "14:46 说现在出门办事。休息日从 sofa-horizontal 切到外出状态，下午这条线暂时转去处理线下事项。",
+          "categoryId": "life",
+          "subcategoryId": "life.errand",
+          "eventNodeId": "",
+          "tags": [
+            "出门",
+            "办事",
+            "休息日"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        }
+      ]
     }
   },
   "proposals": []
