@@ -417,7 +417,7 @@
     },
     "2026-04-26": {
       "status": "draft",
-      "updatedAt": "2026-04-26T06:48:10.971Z",
+      "updatedAt": "2026-04-26T14:47:48.411Z",
       "source": null,
       "events": [
         {
@@ -590,6 +590,181 @@
             "出门",
             "办事",
             "休息日"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:evt-focus-coding:2026-04-26T07-19-00-000Z",
+          "startAt": "2026-04-26T07:19:00.000Z",
+          "endAt": "2026-04-26T07:22:00.000Z",
+          "title": "同步 journal timeline 到 GitHub",
+          "note": "把 .cyberboss 里的 timeline / diary 数据搬到 BomBomLab-Home/journal，重编 runtime.js，并 push 到 GitHub。后面又补了一条一键同步命令，方便以后直接复用。",
+          "categoryId": "work",
+          "subcategoryId": "work.coding",
+          "eventNodeId": "evt.focus_coding",
+          "tags": [
+            "journal",
+            "timeline",
+            "github",
+            "同步"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:骑小毛驴去海边兜风:2026-04-26T07-47-00-000Z",
+          "startAt": "2026-04-26T07:47:00.000Z",
+          "endAt": "2026-04-26T09:30:00.000Z",
+          "title": "骑小毛驴去海边兜风",
+          "note": "办完事情后，准备骑着小毛驴去海边兜风。下午这条线从办事状态切到吹风放空，更像给今天补一个松掉肩膀的尾巴。",
+          "categoryId": "travel",
+          "subcategoryId": "travel.other",
+          "eventNodeId": "",
+          "tags": [
+            "海边",
+            "兜风",
+            "小毛驴",
+            "放风"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:逛街:2026-04-26T08-46-00-000Z",
+          "startAt": "2026-04-26T08:46:00.000Z",
+          "endAt": "2026-04-26T10:30:00.000Z",
+          "title": "逛街",
+          "note": "海边兜风之后没有直接回家，而是又转去逛街。下午一直在外面，从办事切到海边，再切到逛街，整条线都很松。",
+          "categoryId": "life",
+          "subcategoryId": "life.shopping",
+          "eventNodeId": "",
+          "tags": [
+            "逛街",
+            "外面",
+            "海边后"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:逛街买衣服:2026-04-26T08-46-00-000Z",
+          "startAt": "2026-04-26T08:46:00.000Z",
+          "endAt": "2026-04-26T09:05:00.000Z",
+          "title": "逛街买衣服",
+          "note": "逛街阶段明确变成买衣服，目标不是乱晃而是认真挑。17:05 买完，带着战利品把这段收住。",
+          "categoryId": "life",
+          "subcategoryId": "life.shopping",
+          "eventNodeId": "",
+          "tags": [
+            "买衣服",
+            "逛街",
+            "战利品"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:回家路上:2026-04-26T09-05-00-000Z",
+          "startAt": "2026-04-26T09:05:00.000Z",
+          "endAt": "2026-04-26T10:00:00.000Z",
+          "title": "回家路上",
+          "note": "买完衣服后开始准备回去。下午外出的线到这里开始收口，从海边和逛街慢慢切回回家状态。",
+          "categoryId": "travel",
+          "subcategoryId": "travel.other",
+          "eventNodeId": "",
+          "tags": [
+            "回去",
+            "返程",
+            "外出收尾"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:到家收尾:2026-04-26T09-14-00-000Z",
+          "startAt": "2026-04-26T09:14:00.000Z",
+          "endAt": "2026-04-26T09:40:00.000Z",
+          "title": "到家收尾",
+          "note": "17:14 到家。下午外出的线从办事、海边兜风、逛街买衣服一路走到这里，最后顺利回家，节奏很完整。",
+          "categoryId": "life",
+          "subcategoryId": "life.other",
+          "eventNodeId": "",
+          "tags": [
+            "到家",
+            "收尾",
+            "外出后"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:准备做晚饭:2026-04-26T11-38-00-000Z",
+          "startAt": "2026-04-26T11:38:00.000Z",
+          "endAt": "2026-04-26T12:30:00.000Z",
+          "title": "准备做晚饭",
+          "note": "晚上前面先躺了一阵，到 19:38 才刚准备开始做晚饭。大餐线终于启动，晚上的节奏也从休息切到吃饭前的准备。",
+          "categoryId": "life",
+          "subcategoryId": "life.meal",
+          "eventNodeId": "",
+          "tags": [
+            "晚饭",
+            "做饭前",
+            "大餐"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:evt-dinner:2026-04-26T12-05-00-000Z",
+          "startAt": "2026-04-26T12:05:00.000Z",
+          "endAt": "2026-04-26T12:47:00.000Z",
+          "title": "吃晚饭",
+          "note": "晚上等开饭，最后吃上了三文鱼和海鲜。20:47 吃完，这顿饭把下午外出后的疲惫往下压了一截。",
+          "categoryId": "life",
+          "subcategoryId": "life.meal",
+          "eventNodeId": "evt.dinner",
+          "tags": [
+            "晚饭",
+            "三文鱼",
+            "海鲜",
+            "大餐"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:evt-focus-coding:2026-04-26T13-20-00-000Z",
+          "startAt": "2026-04-26T13:20:00.000Z",
+          "endAt": "2026-04-26T14:11:00.000Z",
+          "title": "做完没电小克",
+          "note": "晚上把没电小克这条制作线彻底收掉了。前面经历过调长度、打印翻车、拆眼睛重打，22:11 终于完成。",
+          "categoryId": "work",
+          "subcategoryId": "work.coding",
+          "eventNodeId": "evt.focus_coding",
+          "tags": [
+            "3D打印",
+            "没电小克",
+            "完成",
+            "收尾"
+          ],
+          "confidence": 0.5,
+          "sourceMessageIds": []
+        },
+        {
+          "id": "fact:拍视频发小红书:2026-04-26T14-42-00-000Z",
+          "startAt": "2026-04-26T14:42:00.000Z",
+          "endAt": "2026-04-26T14:47:00.000Z",
+          "title": "拍视频发小红书",
+          "note": "做完没电小克之后，顺手拍了视频并发到小红书。成品不只是完成，还被立刻整理成可发出去的内容。",
+          "categoryId": "work",
+          "subcategoryId": "work.communication",
+          "eventNodeId": "",
+          "tags": [
+            "小红书",
+            "发内容",
+            "没电小克",
+            "视频"
           ],
           "confidence": 0.5,
           "sourceMessageIds": []
