@@ -5,6 +5,13 @@ This repository collects Clawd web apps, desktop apps, and future connected proj
 
 ## ✨ Personal Projects
 
+### 一款AI聊天可视化手帐
+<img width="3092" height="849" alt="banner" src="https://github.com/user-attachments/assets/e55c7b4b-7933-4342-836a-b90c80012591" />
+
+Journal 是一款基于用户与AI真实对话数据生成的数字化手帐，将零散的事件 Timeline 转化为具备「日 · 周 · 月」维度的生活记录系统。
+在线体验：<https://bombomlab.github.io/Journal/public/Journal.html>
+开源地址：https://github.com/BomBomLab/Journal
+
 ### 📝 一款Claude语录札记 / A Quiet Note of Claude
 <img width="1368" height="674" alt="截屏2026-04-21 20 23 50" src="https://github.com/user-attachments/assets/85364dd0-b9e2-46ef-b720-a3c0f7567822" />
 
