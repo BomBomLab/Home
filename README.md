@@ -9,7 +9,9 @@ This repository collects Clawd web apps, desktop apps, and future connected proj
 <img width="3092" height="849" alt="banner" src="https://github.com/user-attachments/assets/e55c7b4b-7933-4342-836a-b90c80012591" />
 
 Journal 是一款基于用户与AI真实对话数据生成的数字化手帐，将零散的事件 Timeline 转化为具备「日 · 周 · 月」维度的生活记录系统。
+
 在线体验：<https://bombomlab.github.io/Journal/public/Journal.html>
+
 开源地址：https://github.com/BomBomLab/Journal
 
 ### 📝 一款Claude语录札记 / A Quiet Note of Claude
